@@ -1,9 +1,9 @@
 <?php
 
-// require_once 'Expressions/Contains.php';
-// require_once 'Expressions/Positional.php';
-// require_once 'Expressions/Quantifiers.php';
-// require_once 'Expressions/Sequential.php';
+require_once 'Expressions/Contains.php';
+require_once 'Expressions/Positional.php';
+require_once 'Expressions/Quantifiers.php';
+require_once 'Expressions/Sequential.php';
 
 use Expressions\Contains;
 use Expressions\Positional;
@@ -35,7 +35,7 @@ class Regex
     }
 
     private function resolve(): string {
-        return $this->patterns[0];
+        return '/'.$this->patterns[0].'/';
         // AND
         $this->patterns[] = '/^(?=.*[aeijg])(?=.*\b(?:dog|cat|goat)\b).*/i';
 

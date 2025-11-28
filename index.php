@@ -1,13 +1,9 @@
 
 <?php
-    // require_once 'Regex.php';
-
-    // Class(es) and Interface(s)
-// Methods that are intuitive enough
-// Parser(s) that convert the user's expression to regex and if-else statements
+    require_once 'Regex.php';
 
     $regexMatch = Regex::build()
-        ->beginsWith('abc')
-        ->match('abcdef');
+        ->containsWordsThatEndWith('cat')
+        ->match('rcat fcat');
 
     echo $regexMatch ? 'Match' : 'No Match';
