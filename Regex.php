@@ -37,14 +37,14 @@ class Regex
     private function resolve(): string {
         return '/'.$this->patterns[0].'/';
         // AND
-        $this->patterns[] = '/^(?=.*[aeijg])(?=.*\b(?:dog|cat|goat)\b).*/i';
+        // $this->patterns[] = '/^(?=.*[aeijg])(?=.*\b(?:dog|cat|goat)\b).*/i';
 
         // OR
-        $this->patterns[] = '/[aeijg]|\b(?:dog|cat|goat)\b/i';
+        // $this->patterns[] = '/[aeijg]|\b(?:dog|cat|goat)\b/i';
 
 
         // NOT
-        $this->patterns[] = '/^(?!.*[aeijg])(?!.*\b(?:dog|cat|goat)\b).*$/i';
+        // $this->patterns[] = '/^(?!.*[aeijg])(?!.*\b(?:dog|cat|goat)\b).*$/i';
 
     }
     

@@ -26,16 +26,16 @@ trait Contains {
         return $this;
     }
 
-    public function doesntContainAny(string|array $chars) {
+    public function doesntContainAnyOf(string|array $chars) {
         if(empty($chars)) {
-            // return an exception
+            return $this;
         }
 
         if (is_array($chars)) {
-            $this->patterns[] = "[^".implode("|", $chars)."]";
-        }
-        if(is_string($chars)) {
-            $this->patterns[] = "[^$chars]";
+            // Fails if any of the characters are present
+            $this->patterns[] = '^(?!.*(' . implode('|', array_map(fn($char) => preg_quote($char, '/'), $chars)) . ')).*$';
+        } elseif (is_string($chars)) {
+            $this->patterns[] = "^[^" . preg_quote($chars, '/') . "]*$";
         }
 
         return $this;
@@ -58,8 +58,7 @@ trait Contains {
     }
 
     public function doesntContainOnlyDigits() {
-        // $this->patterns[] = "^\D+$";
-        $this->patterns[] = "^(?!\d+$).+/";
+        $this->patterns[] = "^(?!\d+$).+";
         return $this;
     }
 
@@ -69,12 +68,22 @@ trait Contains {
     }
 
     public function containsAlphaNumeric() {
-        $this->patterns[] = "\w";
+        $this->patterns[] = "[A-Za-z0-9]";
         return $this;
     }
 
     public function doesntContainAlphaNumeric() {
-        $this->patterns[] = "\W";
+        $this->patterns[] = "^(?!.*[A-Za-z0-9]).*$";
+        return $this;
+    }
+
+    public function containsOnlyAlphaNumeric() {
+        $this->patterns[] = "^[A-Za-z0-9]+$";
+        return $this;
+    }
+
+    public function doesntContainOnlyAlphaNumeric() {
+        $this->patterns[] = "[^A-Za-z0-9]";
         return $this;
     }
 
