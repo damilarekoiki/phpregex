@@ -1,5 +1,5 @@
 <?php
-namespace Expressions;
+namespace Ten\Phpregex\Expressions;
 
 trait Positional {
 

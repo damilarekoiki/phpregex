@@ -1,0 +1,28 @@
+{
+    "name": "ten/phpregex",
+    "description": "Intuitive way of working with regex in PHP",
+    "type": "package",
+    "require-dev": {
+        "pestphp/pest": "^4.1",
+        "phpstan/phpstan": "^2.1",
+        "friendsofphp/php-cs-fixer": "^3.91",
+        "rector/rector": "^2.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ten\\Phpregex\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Damilare Koiki",
+            "email": "koikidamilare@gmail.com"
+        }
+    ],
+    "minimum-stability": "beta",
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}

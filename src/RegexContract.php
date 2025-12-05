@@ -1,5 +1,7 @@
 <?php
 
+namespace Ten\Phpregex;
+
 interface RegexContract
 {
     public function parse($expression);

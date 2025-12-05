@@ -1,6 +1,8 @@
 
 <?php
-    require_once 'Regex.php';
+    require_once 'vendor/autoload.php';
+
+    use Ten\Phpregex\Regex;
 
     $regexMatch = Regex::build()
         ->doesntContainOnlyAlphaNumeric()

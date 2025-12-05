@@ -1,14 +1,11 @@
 <?php
 
-require_once 'Expressions/Contains.php';
-require_once 'Expressions/Positional.php';
-require_once 'Expressions/Quantifiers.php';
-require_once 'Expressions/Sequential.php';
+namespace Ten\Phpregex;
 
-use Expressions\Contains;
-use Expressions\Positional;
-use Expressions\Quantifiers;
-use Expressions\Sequential;
+use Ten\Phpregex\Expressions\Contains;
+use Ten\Phpregex\Expressions\Positional;
+use Ten\Phpregex\Expressions\Quantifiers;
+use Ten\Phpregex\Expressions\Sequential;
 
 class Regex
 {
