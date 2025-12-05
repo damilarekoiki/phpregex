@@ -1,7 +1,11 @@
 {
     "name": "ten/phpregex",
     "description": "Intuitive way of working with regex in PHP",
-    "type": "package",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^7.4 || ^8.0"
+    },
     "require-dev": {
         "pestphp/pest": "^4.1",
         "phpstan/phpstan": "^2.1",
@@ -19,7 +23,8 @@
             "email": "koikidamilare@gmail.com"
         }
     ],
-    "minimum-stability": "beta",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true
