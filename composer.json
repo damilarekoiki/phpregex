@@ -29,5 +29,10 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
+    },
+    "scripts": {
+        "cs": "vendor/bin/php-cs-fixer check",
+        "cs:fix": "vendor/bin/php-cs-fixer fix",
+        "test": "vendor/bin/pest"
     }
 }

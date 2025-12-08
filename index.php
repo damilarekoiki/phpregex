@@ -1,11 +1,11 @@
 
 <?php
-    require_once 'vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
-    use Ten\Phpregex\Regex;
+use Ten\Phpregex\Regex;
 
-    $regexMatch = Regex::build()
-        ->doesntContainOnlyAlphaNumeric()
-        ->match('r bcat fcat2_');
+$regexMatch = Regex::build()
+    ->doesntContainOnlyAlphaNumeric()
+    ->match('r bcat fcat2_');
 
-    echo $regexMatch ? 'Match' : 'No Match';
+echo $regexMatch ? 'Match' : 'No Match';

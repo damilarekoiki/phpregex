@@ -2,19 +2,22 @@
 
 namespace Ten\Phpregex\Expressions;
 
-trait Quantifiers {
-
-    public function containsAtleastOne($subject) {
+trait Quantifiers
+{
+    public function containsAtleastOne($subject)
+    {
         $this->patterns[] = "$subject+";
         return $this;
     }
 
-    public function containsZeroOrMore($subject) {
+    public function containsZeroOrMore($subject)
+    {
         $this->patterns[] = "$subject*";
         return $this;
     }
 
-    public function containsZeroOrOne($subject) {
+    public function containsZeroOrOne($subject)
+    {
         $this->patterns[] = "$subject?";
         return $this;
     }
