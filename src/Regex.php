@@ -14,14 +14,14 @@ class Regex
     use Quantifiers;
     use Sequential;
 
+    /**
+     * @var array<string>
+     */
     private array $patterns = [];
-
-    private string $word = "";
 
     public static function build(): self
     {
-        $instance = new self();
-        return $instance;
+        return new self();
     }
 
     public function match(string $word): bool
@@ -33,7 +33,7 @@ class Regex
         //     }
         // }
         // return false;
-        return preg_match($this->resolve(), $word);
+        return (bool) preg_match($this->resolve(), $word);
     }
 
     private function resolve(): string

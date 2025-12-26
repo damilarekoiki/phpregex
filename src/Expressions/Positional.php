@@ -4,27 +4,27 @@ namespace Ten\Phpregex\Expressions;
 
 trait Positional
 {
-    public function between($subject1, $subject2, $caseSensitive)
+    public function between(string|int $subject1, string|int $subject2, bool $caseSensitive): self
     {
-        $this->patterns[] = "[$subject1-$subject2]";
+        $this->patterns[] = "[" . $subject1 . "-" . $subject2 . "]";
         return $this;
     }
 
-    public function notBetween($subject1, $subject2)
+    public function notBetween(string|int $subject1, string|int $subject2): self
     {
-        $this->patterns[] = "[^$subject1-$subject2]";
+        $this->patterns[] = "[^" . $subject1 . "-" . $subject2 . "]";
         return $this;
     }
 
-    public function beginsWith($subject)
+    public function beginsWith(string|int $subject): self
     {
-        $this->patterns[] = "^$subject";
+        $this->patterns[] = "^" . $subject;
         return $this;
     }
 
-    public function endsWith($subject)
+    public function endsWith(string|int $subject): self
     {
-        $this->patterns[] = "$subject$";
+        $this->patterns[] = $subject . "$";
         return $this;
     }
 }

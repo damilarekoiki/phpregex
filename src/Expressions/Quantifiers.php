@@ -4,21 +4,21 @@ namespace Ten\Phpregex\Expressions;
 
 trait Quantifiers
 {
-    public function containsAtleastOne($subject)
+    public function containsAtleastOne(string|int $subject): self
     {
-        $this->patterns[] = "$subject+";
+        $this->patterns[] = $subject . "+";
         return $this;
     }
 
-    public function containsZeroOrMore($subject)
+    public function containsZeroOrMore(string|int $subject): self
     {
-        $this->patterns[] = "$subject*";
+        $this->patterns[] = $subject . "*";
         return $this;
     }
 
-    public function containsZeroOrOne($subject)
+    public function containsZeroOrOne(string|int $subject): self
     {
-        $this->patterns[] = "$subject?";
+        $this->patterns[] = $subject . "?";
         return $this;
     }
 }

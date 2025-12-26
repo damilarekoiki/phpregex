@@ -1,0 +1,12 @@
+parameters:
+    level: max
+    paths:
+        - src
+        - tests
+    ignoreErrors:
+        -
+            message: '#Undefined variable: \$this#'
+            path: tests/Pest.php
+        -
+            message: '#Cannot call method toBe\(\) on mixed#'
+            path: tests/Pest.php

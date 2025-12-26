@@ -4,64 +4,63 @@ namespace Ten\Phpregex;
 
 interface RegexContract
 {
-    public function parse($expression);
+    public function parse(string $expression): self;
 
-    public function match($subject);
+    public function match(string $subject): bool;
 
-    public function replace($subject);
+    public function replace(string $subject): string;
 
-    public function replaceAll($subject);
+    public function replaceAll(string $subject): string;
 
-    public function get($subject);
+    public function get(string $subject): string;
 
-    public function count($subject);
+    public function count(string $subject): int;
 
-    public function or();
+    public function or(): self;
 
-    public function and();
+    public function and(): self;
 
-    public function not();
+    public function not(): self;
 
-    // $subject is a string of characters. Contains any of the characters in the string|Array
-    public function containsAny(string|array $subject);
+    /**
+     * @param string|array<int|string> $subject
+     */
+    public function containsAny(string|array $subject): self;
 
-    // Contains exactly the whole string or number
-    public function contains(string|int $subject);
+    public function contains(string|int $subject): self;
 
-    // Contains case insensitive
-    public function containsCaseInsensitive(string|int $subject);
+    public function containsCaseInsensitive(string|int $subject): self;
 
-    // Contains any string or int that is alphabetically or numerically between subject1 and subject2
-    public function between($subject1, $subject2, $caseSensitive);
+    public function between(string|int $subject1, string|int $subject2, bool $caseSensitive): self;
 
-    public function notBetween($subject1, $subject2);
+    public function notBetween(string|int $subject1, string|int $subject2): self;
 
-    public function beginsWith($subject);
+    public function beginsWith(string|int $subject): self;
 
-    public function endsWith($subject);
+    public function endsWith(string|int $subject): self;
 
-    public function containsDigit();
+    public function containsDigit(): self;
 
-    public function containsNonDigit();
+    public function containsNonDigit(): self;
 
-    public function containsAlphaNumeric();
+    public function containsAlphaNumeric(): self;
 
-    public function containsNonAlphaNumeric();
+    public function containsNonAlphaNumeric(): self;
 
-    public function beginsOrEndsWith($subject);
+    public function beginsOrEndsWith(string|int $subject): self;
 
-    public function containsUnicode($subject);
+    public function containsUnicode(string $subject): self;
 
-    public function containsAtleastOne($subject);
+    public function containsAtleastOne(string|int $subject): self;
 
-    public function containsZeroOrMore($subject);
+    public function containsZeroOrMore(string|int $subject): self;
 
-    public function containsZeroOrOne($subject);
+    public function containsZeroOrOne(string|int $subject): self;
 
-    public function containsExactSequencesOf($subject, $occurences);
+    public function containsExactSequencesOf(string|int $subject, int $occurences): self;
 
-    public function containsSequencesOf($subject, $minOcurrences, $maxOccurrences);
+    public function containsSequencesOf(string|int $subject, int $minOcurrences, int $maxOccurrences): self;
 
-    public function containsAtleastSequencesOf($subject, $minOcurrences);
+    public function containsAtleastSequencesOf(string|int $subject, int $minOcurrences): self;
 
 }

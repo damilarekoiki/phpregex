@@ -7,29 +7,35 @@ use function is_string;
 
 trait Contains
 {
-    public function contains(string|int $chars)
+    public function contains(string|int $chars): self
     {
         $this->patterns[] = (string) $chars;
         return $this;
     }
 
-    public function containsAnyOf(string|array $chars)
+    /**
+     * @param string|array<int|string> $chars
+     */
+    public function containsAnyOf(string|array $chars): self
     {
         if (empty($chars)) {
             // return an exception
         }
 
         if (is_array($chars)) {
-            $this->patterns[] = implode("|", $chars) ?? "";
+            $this->patterns[] = implode("|", $chars);
         }
         if (is_string($chars)) {
-            $this->patterns[] = "[$chars]";
+            $this->patterns[] = "[{$chars}]";
         }
 
         return $this;
     }
 
-    public function doesntContainAnyOf(string|array $chars)
+    /**
+     * @param string|array<int|string> $chars
+     */
+    public function doesntContainAnyOf(string|array $chars): self
     {
         if (empty($chars)) {
             return $this;
@@ -37,7 +43,7 @@ trait Contains
 
         if (is_array($chars)) {
             // Fails if any of the characters are present
-            $this->patterns[] = '^(?!.*(' . implode('|', array_map(fn ($char) => preg_quote($char, '/'), $chars)) . ')).*$';
+            $this->patterns[] = '^(?!.*(' . implode('|', array_map(fn ($char): string => preg_quote((string) $char, '/'), $chars)) . ')).*$';
         } elseif (is_string($chars)) {
             $this->patterns[] = "^[^" . preg_quote($chars, '/') . "]*$";
         }
@@ -45,70 +51,70 @@ trait Contains
         return $this;
     }
 
-    public function containsDigit()
+    public function containsDigit(): self
     {
         $this->patterns[] = "\d";
         return $this;
     }
 
-    public function doesntContainDigit()
+    public function doesntContainDigit(): self
     {
         // $this->patterns[] = "[^0-9]";
         $this->patterns[] = "^\D*$";
         return $this;
     }
 
-    public function containsOnlyDigits()
+    public function containsOnlyDigits(): self
     {
         $this->patterns[] = "^\d+$";
         return $this;
     }
 
-    public function doesntContainOnlyDigits()
+    public function doesntContainOnlyDigits(): self
     {
         $this->patterns[] = "^(?!\d+$).+";
         return $this;
     }
 
-    public function containsNonDigit()
+    public function containsNonDigit(): self
     {
         $this->patterns[] = "\D";
         return $this;
     }
 
-    public function containsAlphaNumeric()
+    public function containsAlphaNumeric(): self
     {
         $this->patterns[] = "[A-Za-z0-9]";
         return $this;
     }
 
-    public function doesntContainAlphaNumeric()
+    public function doesntContainAlphaNumeric(): self
     {
         $this->patterns[] = "^(?!.*[A-Za-z0-9]).*$";
         return $this;
     }
 
-    public function containsOnlyAlphaNumeric()
+    public function containsOnlyAlphaNumeric(): self
     {
         $this->patterns[] = "^[A-Za-z0-9]+$";
         return $this;
     }
 
-    public function doesntContainOnlyAlphaNumeric()
+    public function doesntContainOnlyAlphaNumeric(): self
     {
         $this->patterns[] = "[^A-Za-z0-9]";
         return $this;
     }
 
-    public function containsWordsThatBeginWith($subject)
+    public function containsWordsThatBeginWith(string|int $subject): self
     {
-        $this->patterns[] = "\b$subject";
+        $this->patterns[] = "\b" . $subject;
         return $this;
     }
 
-    public function containsWordsThatEndWith($subject)
+    public function containsWordsThatEndWith(string|int $subject): self
     {
-        $this->patterns[] = "$subject\b";
+        $this->patterns[] = $subject . "\b";
         return $this;
     }
 }
