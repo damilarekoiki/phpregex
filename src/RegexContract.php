@@ -57,10 +57,49 @@ interface RegexContract
 
     public function containsZeroOrOne(string|int $subject): self;
 
+    public function oneOrMore(string|int $subject): self;
+
+    public function zeroOrMore(string|int $subject): self;
+
+    public function maybe(string|int $subject): self;
+
     public function containsExactSequencesOf(string|int $subject, int $occurences): self;
 
     public function containsSequencesOf(string|int $subject, int $minOcurrences, int $maxOccurrences): self;
 
     public function containsAtleastSequencesOf(string|int $subject, int $minOcurrences): self;
+
+    public function then(string|int $subject): self;
+
+    public function repeat(string|int $subject, int $times): self;
+
+    public function repeatAtLeast(string|int $subject, int $times): self;
+
+    public function repeatBetween(string|int $subject, int $min, int $max): self;
+
+    public function containsLetter(): self;
+
+    public function containsLowercaseLetter(): self;
+
+    public function containsUppercaseLetter(): self;
+
+    public function containsWhitespace(): self;
+
+    public function containsNonWhitespace(): self;
+
+    public function containsWordCharacter(): self;
+
+    public function containsNonWordCharacter(): self;
+
+    public function containsAnything(): self;
+
+    public function followedBy(string|int $subject): self;
+
+    public function notFollowedBy(string|int $subject): self;
+
+    public function precededBy(string|int $subject): self;
+
+    public function notPrecededBy(string|int $subject): self;
+
 
 }

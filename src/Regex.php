@@ -2,12 +2,14 @@
 
 namespace Ten\Phpregex;
 
+use Stringable;
+use Closure;
 use Ten\Phpregex\Expressions\Contains;
 use Ten\Phpregex\Expressions\Positional;
 use Ten\Phpregex\Expressions\Quantifiers;
 use Ten\Phpregex\Expressions\Sequential;
 
-class Regex
+class Regex implements Stringable
 {
     use Contains;
     use Positional;
@@ -36,9 +38,26 @@ class Regex
         return (bool) preg_match($this->resolve(), $word);
     }
 
+    public function sequence(Closure $callback): self
+    {
+        $callback(new Sequence($this));
+        return $this;
+    }
+
+    public function addPattern(string $pattern): self
+    {
+        $this->patterns[] = $pattern;
+        return $this;
+    }
+
+    public function setPattern(string $pattern): void
+    {
+        $this->patterns = [$pattern];
+    }
+
     private function resolve(): string
     {
-        return '/'.$this->patterns[0].'/';
+        return '/' . implode('', $this->patterns) . '/';
         // AND
         // $this->patterns[] = '/^(?=.*[aeijg])(?=.*\b(?:dog|cat|goat)\b).*/i';
 
@@ -49,6 +68,11 @@ class Regex
         // NOT
         // $this->patterns[] = '/^(?!.*[aeijg])(?!.*\b(?:dog|cat|goat)\b).*$/i';
 
+    }
+
+    public function __toString(): string
+    {
+        return $this->resolve();
     }
 
 }

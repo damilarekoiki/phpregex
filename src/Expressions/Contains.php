@@ -9,7 +9,7 @@ trait Contains
 {
     public function contains(string|int $chars): self
     {
-        $this->patterns[] = (string) $chars;
+        $this->patterns[] = '(?=.*' . preg_quote((string) $chars, '/') . ')';
         return $this;
     }
 
@@ -115,6 +115,54 @@ trait Contains
     public function containsWordsThatEndWith(string|int $subject): self
     {
         $this->patterns[] = $subject . "\b";
+        return $this;
+    }
+
+    public function containsLetter(): self
+    {
+        $this->patterns[] = "[a-zA-Z]";
+        return $this;
+    }
+
+    public function containsLowercaseLetter(): self
+    {
+        $this->patterns[] = "[a-z]";
+        return $this;
+    }
+
+    public function containsUppercaseLetter(): self
+    {
+        $this->patterns[] = "[A-Z]";
+        return $this;
+    }
+
+    public function containsWhitespace(): self
+    {
+        $this->patterns[] = "\s";
+        return $this;
+    }
+
+    public function containsNonWhitespace(): self
+    {
+        $this->patterns[] = "\S";
+        return $this;
+    }
+
+    public function containsWordCharacter(): self
+    {
+        $this->patterns[] = "\w";
+        return $this;
+    }
+
+    public function containsNonWordCharacter(): self
+    {
+        $this->patterns[] = "\W";
+        return $this;
+    }
+
+    public function containsAnything(): self
+    {
+        $this->patterns[] = ".";
         return $this;
     }
 }

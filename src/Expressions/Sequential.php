@@ -18,7 +18,7 @@ trait Sequential
 
     public function containsAtleastSequencesOf(string|int $subject, int $minOcurrences): self
     {
-        // $this->patterns[] = "$subject{$minOcurrences , }";
+        $this->patterns[] = $subject . "{" . $minOcurrences . ",}";
         return $this;
     }
 }
