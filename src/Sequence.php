@@ -13,30 +13,36 @@ class Sequence
     private bool $started = false;
     private bool $ended = false;
     private string $startingPattern = '(?=.*(';
-    // private string $startingPattern = '(^(';
     public function __construct(private Regex $regex, private bool $startFromBeginning = false)
     {
         if($startFromBeginning) {
-            // $this->startingPattern = "^{$this->startingPattern}";
+            $this->startingPattern = "(^(";
         }
         $this->startSequence();
     }
 
     public function then(Closure|string|int $subject): self
     {
-        $pattern = '.*';
+        $pattern = '';
 
         if($subject instanceof Closure) {
+            if($this->patterns != [$this->startingPattern]) {
+                $pattern = '.*';
+            }
             $regex = (new Regex())->build();
             $subject($regex);
 
             $patternFromClosure = $regex->getPattern();
             if($this->patterns === [$this->startingPattern]) {
                 $patternFromClosure = str_replace('?=', '', $patternFromClosure);
+                if($this->startFromBeginning) {
+                    $patternFromClosure = str_replace('.*', '', $patternFromClosure);
+                }
             }
             $pattern .= $patternFromClosure;
 
         }else {
+            $pattern = '.*';
             $pattern .= preg_quote((string) $subject, '/');
         }
 

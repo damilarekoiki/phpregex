@@ -9,15 +9,16 @@ $regex = Regex::build()
     // ->contains('a')
     // ->contains('b')
     ->sequence(function (Sequence $sequence): void {
-        $sequence->then(fn(Regex $regex) => $regex->contains('p'))
-            ->then(fn(Regex $regex) => $regex->contains('l'));
-    }, startFromBeginning: true)
+        $sequence->then(fn (Regex $regex) => $regex->containsLowercaseLetter())
+            ->then(fn (Regex $regex) => $regex->contains('apple'))
+            ;
+    }, startFromBeginning: false)
     // ->containsNonDigit()
     // ->addPattern('(?=.*a)(?=.*b)(?=.*(.*(.*apple).*(?=.*banana)))')
     ;
 
 echo $regex->get();
 
-$regexMatch = $regex->match('1banana2apple');
+$regexMatch = $regex->match('bbanana2apple');
 
 echo $regexMatch ? 'Match' : 'No Match';
