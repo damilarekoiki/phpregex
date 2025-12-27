@@ -6,10 +6,10 @@ use Ten\Phpregex\Regex;
 use Ten\Phpregex\Sequence;
 
 $regex = Regex::build()
-    // ->contains('a')
-    // ->contains('b')
+    ->contains('a')
+    ->contains('b')
     ->sequence(function (Sequence $sequence): void {
-        $sequence->then(fn (Regex $regex) => $regex->containsLowercaseLetter())
+        $sequence->then('banana')
             ->then(fn (Regex $regex) => $regex->contains('apple'))
             ;
     }, startFromBeginning: false)

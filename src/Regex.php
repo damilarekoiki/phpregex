@@ -2,7 +2,6 @@
 
 namespace Ten\Phpregex;
 
-use Closure;
 use Ten\Phpregex\Expressions\Contains;
 use Ten\Phpregex\Expressions\Positional;
 use Ten\Phpregex\Expressions\Quantifiers;
@@ -28,14 +27,6 @@ class Regex
     public function match(string $word): bool
     {
         return (bool) preg_match($this->resolve(), $word);
-    }
-
-    public function sequence(Closure $callback, bool $startFromBeginning = false): self
-    {
-        $sequence = new Sequence($this, $startFromBeginning);
-        $callback($sequence);
-        $sequence->endSequence();
-        return $this;
     }
 
     public function addPattern(string $pattern): self

@@ -3,6 +3,8 @@
 namespace Ten\Phpregex;
 
 use Closure;
+use Ten\Phpregex\Resolvers\SequencePatternFromClosure;
+use Ten\Phpregex\Resolvers\SequencePatternFromScalar;
 
 class Sequence
 {
@@ -26,24 +28,14 @@ class Sequence
         $pattern = '';
 
         if($subject instanceof Closure) {
-            if($this->patterns != [$this->startingPattern]) {
-                $pattern = '.*';
-            }
             $regex = (new Regex())->build();
             $subject($regex);
-
             $patternFromClosure = $regex->getPattern();
-            if($this->patterns === [$this->startingPattern]) {
-                $patternFromClosure = str_replace('?=', '', $patternFromClosure);
-                if($this->startFromBeginning) {
-                    $patternFromClosure = str_replace('.*', '', $patternFromClosure);
-                }
-            }
-            $pattern .= $patternFromClosure;
+
+            $pattern = new SequencePatternFromClosure($patternFromClosure, $this->patterns, $this->startingPattern);
 
         }else {
-            $pattern = '.*';
-            $pattern .= preg_quote((string) $subject, '/');
+            $pattern = new SequencePatternFromScalar($subject, $this->patterns, $this->startingPattern, $this->startFromBeginning);
         }
 
         $this->patterns[] = $pattern;
