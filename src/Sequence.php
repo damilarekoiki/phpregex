@@ -39,7 +39,7 @@ class Sequence
         }
 
         $this->patterns[] = $pattern;
-        $this->regex->addPattern($pattern);
+        $this->regex->addPattern((string) $pattern, $this->startFromBeginning);
 
         return $this;
     }
@@ -50,7 +50,7 @@ class Sequence
             return;
         }
         $this->patterns[] = $this->startingPattern;
-        $this->regex->addPattern($this->startingPattern);
+        $this->regex->addPattern($this->startingPattern, $this->startFromBeginning);
         $this->started = true;
     }
 
@@ -60,7 +60,7 @@ class Sequence
             return;
         }
         $this->patterns[] = '))';
-        $this->regex->addPattern('))');
+        $this->regex->addPattern('))', $this->startFromBeginning);
         $this->ended = true;
     }
 }

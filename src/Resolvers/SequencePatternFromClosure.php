@@ -12,14 +12,22 @@ class SequencePatternFromClosure implements Stringable
     public function __toString(): string
     {
         $pattern = '';
+        $patternFromClosure = $this->patternFromClosure;
 
-        if($this->patterns != [$this->startingPattern]) {
-            $pattern = '.*';
+        $isFirst = $this->patterns === [$this->startingPattern];
+
+        if ($isFirst) {
+            if (str_starts_with($patternFromClosure, '(?=')) {
+                $patternFromClosure = substr($patternFromClosure, 3, -1);
+            }
+        } else {
+            // Don't prepend .* if it's a lookahead
+            if (!str_starts_with($patternFromClosure, '(?=') && !str_starts_with($patternFromClosure, '(?!')) {
+                $pattern = '.*';
+            }
         }
-        if($this->patterns === [$this->startingPattern]) {
-            $this->patternFromClosure = str_replace('?=', '', $this->patternFromClosure);
-        }
-        $pattern .= $this->patternFromClosure;
+
+        $pattern .= $patternFromClosure;
 
         return $pattern;
     }

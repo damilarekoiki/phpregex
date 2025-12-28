@@ -9,20 +9,17 @@ trait Sequential
 {
     public function containsExactSequencesOf(string|int $subject, int $occurences): self
     {
-        $this->patterns[] = $subject . "{" . $occurences . "}";
-        return $this;
+        return $this->addPattern($subject . "{" . $occurences . "}");
     }
 
     public function containsSequencesOf(string|int $subject, int $minOcurrences, int $maxOccurrences): self
     {
-        $this->patterns[] = $subject . "{" . $minOcurrences . "," . $maxOccurrences . "}";
-        return $this;
+        return $this->addPattern($subject . "{" . $minOcurrences . "," . $maxOccurrences . "}");
     }
 
     public function containsAtleastSequencesOf(string|int $subject, int $minOcurrences): self
     {
-        $this->patterns[] = $subject . "{" . $minOcurrences . ",}";
-        return $this;
+        return $this->addPattern($subject . "{" . $minOcurrences . ",}");
     }
 
     public function sequence(Closure $callback, bool $startFromBeginning = false): self

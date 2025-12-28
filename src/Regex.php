@@ -2,10 +2,16 @@
 
 namespace Ten\Phpregex;
 
+use BadMethodCallException;
+use Closure;
+use LogicException;
 use Ten\Phpregex\Expressions\Contains;
 use Ten\Phpregex\Expressions\Positional;
 use Ten\Phpregex\Expressions\Quantifiers;
 use Ten\Phpregex\Expressions\Sequential;
+use Ten\Phpregex\Expressions\Helpers;
+use Ten\Phpregex\Expressions\Flags;
+use Ten\Phpregex\Expressions\Booleans;
 
 class Regex
 {
@@ -13,15 +19,29 @@ class Regex
     use Positional;
     use Quantifiers;
     use Sequential;
+    use Helpers;
+    use Flags;
+    use Booleans;
 
     /**
      * @var array<string>
      */
     private array $patterns = [];
 
-    public static function build(): self
+    private array $magicMethods = [
+        'or',
+        'and',
+        'not',
+    ];
+
+    private bool $wholeString = false;
+    private bool $isConsuming = false;
+
+    public static function build(bool $wholeString = false): self
     {
-        return new self();
+        $regex = new self();
+        $regex->wholeString = $wholeString;
+        return $regex;
     }
 
     public function match(string $word): bool
@@ -29,9 +49,12 @@ class Regex
         return (bool) preg_match($this->resolve(), $word);
     }
 
-    public function addPattern(string $pattern): self
+    public function addPattern(string $pattern, bool $consuming = true): self
     {
         $this->patterns[] = $pattern;
+        if ($consuming) {
+            $this->isConsuming = true;
+        }
         return $this;
     }
 
@@ -40,19 +63,21 @@ class Regex
         $this->patterns = [$pattern];
     }
 
+    public function __get(string $name): mixed
+    {
+        if (!in_array($name, $this->magicMethods)) {
+            throw new LogicException("You cannot access \"{$name}\" property. Do you mean \"{$name}()\"?");
+        }
+        if (method_exists($this, $name) === false) {
+            throw new BadMethodCallException("Method \"{$name}\" does not exist.");
+        }
+
+        return $this->{$name}();
+    }
+
     private function resolve(): string
     {
-        return '/' . $this->getPattern() . '/';
-        // AND
-        // $this->patterns[] = '/^(?=.*[aeijg])(?=.*\b(?:dog|cat|goat)\b).*/i';
-
-        // OR
-        // $this->patterns[] = '/[aeijg]|\b(?:dog|cat|goat)\b/i';
-
-
-        // NOT
-        // $this->patterns[] = '/^(?!.*[aeijg])(?!.*\b(?:dog|cat|goat)\b).*$/i';
-
+        return '/' . $this->getPattern() . '/' . implode('', array_unique($this->flags ?? []));
     }
 
     public function get(): string
@@ -62,6 +87,40 @@ class Regex
 
     public function getPattern(): string
     {
-        return implode('', $this->patterns);
+        $pattern = implode('', $this->patterns);
+
+        if ($this->wholeString) {
+            if (!$this->isConsuming) {
+                $pattern .= '.*';
+            }
+            return '^' . $pattern . '$';
+        }
+
+        return $pattern;
+    }
+
+    public function group(Closure $closure): self
+    {
+        $regex = Regex::build();
+        $this->addPattern('(');
+        $closure($regex);
+        $this->addPattern($regex->getPattern());
+        $this->addPattern(')');
+        return $this;
+    }
+
+    /**
+     * Indicates that the pattern should match the entire string
+     * @return Regex
+     */
+    public function wholeString(): self
+    {
+        $this->wholeString = true;
+        return $this;
+    }
+
+    public function isFirst(): bool
+    {
+        return empty($this->patterns);
     }
 }
