@@ -24,10 +24,13 @@ class Regex
     use Booleans;
 
     /**
-     * @var array<string>
+     * @var array<int, string>
      */
     private array $patterns = [];
 
+    /**
+     * @var array<int, string>
+     */
     private array $magicMethods = [
         'or',
         'and',

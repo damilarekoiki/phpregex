@@ -6,6 +6,11 @@ use Stringable;
 
 class SequencePatternFromClosure implements Stringable
 {
+    /**
+     * @param string $patternFromClosure
+     * @param array<int, string> $patterns
+     * @param string $startingPattern
+     */
     public function __construct(private string $patternFromClosure, private array $patterns, private string $startingPattern)
     {
     }

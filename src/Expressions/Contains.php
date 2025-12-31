@@ -25,7 +25,7 @@ trait Contains
     public function containsAnyOf(string|array $chars): self
     {
         if (empty($chars)) {
-            // return an exception
+            return $this;
         }
 
         if (is_array($chars)) {
@@ -48,7 +48,6 @@ trait Contains
         }
 
         if (is_array($chars)) {
-            // Fails if any of the characters are present
             $this->addPattern('^(?!.*(' . implode('|', array_map(fn ($char): string => preg_quote((string) $char, '/'), $chars)) . ')).*$');
         } elseif (is_string($chars)) {
             $this->addPattern("^[^" . preg_quote($chars, '/') . "]*$");
@@ -64,7 +63,6 @@ trait Contains
 
     public function doesntContainDigit(): self
     {
-        // $this->addPattern("[^0-9]");
         return $this->addPattern("^\D*$");
     }
 

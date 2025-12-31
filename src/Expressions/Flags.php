@@ -7,6 +7,9 @@ use Ten\Phpregex\Regex;
 
 trait Flags
 {
+    /**
+     * @var array<int, string>
+     */
     protected array $flags = [];
 
     public function ignoreCase(): self
@@ -77,12 +80,14 @@ trait Flags
 
     private function addLocalFlag(string $flag, string|Closure $subject): self
     {
-        $pattern = $subject;
+        $pattern = '';
 
         if ($subject instanceof Closure) {
             $regex = (new Regex())->build();
             $subject($regex);
             $pattern = $regex->getPattern();
+        } else {
+            $pattern = $subject;
         }
 
         $this->patterns[] = "(?{$flag}:{$pattern})";

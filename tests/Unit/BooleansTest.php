@@ -40,7 +40,7 @@ test('not method works as a negative lookahead', function () {
 });
 
 test('not method with closure works', function () {
-    $regex = Regex::build()->not(fn($r) => $r->addPattern('cherry'));
+    $regex = Regex::build()->not(fn(Regex $r) => $r->addPattern('cherry'));
     expect($regex->getPattern())->toBe('(?!cherry)');
 });
 
@@ -62,7 +62,7 @@ test('when method works with true condition', function () {
     $condition = true;
     $regex = Regex::build()
         ->addPattern('start')
-        ->when($condition, function ($r) {
+        ->when($condition, function (Regex $r) {
             $r->addPattern('-middle');
         })
         ->addPattern('-end');
@@ -74,7 +74,7 @@ test('when method works with false condition', function () {
     $condition = false;
     $regex = Regex::build()
         ->addPattern('start')
-        ->when($condition, function ($r) {
+        ->when($condition, function (Regex $r) {
             $r->addPattern('-middle');
         })
         ->addPattern('-end');

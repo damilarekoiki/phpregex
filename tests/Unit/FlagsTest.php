@@ -30,7 +30,7 @@ test('local ignoreCase flag with string', function () {
 });
 
 test('local ignoreCase flag with closure', function () {
-    $regex = Regex::build()->ignoreCaseFor(fn($r) => $r->addPattern('abc'))->addPattern('DEF');
+    $regex = Regex::build()->ignoreCaseFor(fn(Regex $r) => $r->addPattern('abc'))->addPattern('DEF');
     expect($regex->getPattern())->toBe('(?i:abc)DEF');
     expect($regex->match('ABCDEF'))->toBeTrue();
 });

@@ -35,7 +35,7 @@ class Sequence
             $pattern = new SequencePatternFromClosure($patternFromClosure, $this->patterns, $this->startingPattern);
 
         }else {
-            $pattern = new SequencePatternFromScalar($subject, $this->patterns, $this->startingPattern, $this->startFromBeginning);
+            $pattern = new SequencePatternFromScalar((string) $subject, $this->patterns, $this->startingPattern, $this->startFromBeginning);
         }
 
         $this->patterns[] = $pattern;
