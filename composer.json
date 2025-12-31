@@ -4,13 +4,13 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "php": "^8.0"
+        "php": "^8.2"
     },
     "require-dev": {
-        "pestphp/pest": "^4.1",
         "phpstan/phpstan": "^2.1",
         "friendsofphp/php-cs-fixer": "^3.91",
-        "rector/rector": "^2.2"
+        "rector/rector": "^2.2",
+        "pestphp/pest": "^3.8"
     },
     "autoload": {
         "psr-4": {

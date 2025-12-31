@@ -17,7 +17,7 @@ class Sequence
     private string $startingPattern = '(?=.*(';
     public function __construct(private Regex $regex, private bool $startFromBeginning = false)
     {
-        if($startFromBeginning) {
+        if ($startFromBeginning) {
             $this->startingPattern = "(^(";
         }
         $this->startSequence();
@@ -27,14 +27,14 @@ class Sequence
     {
         $pattern = '';
 
-        if($subject instanceof Closure) {
+        if ($subject instanceof Closure) {
             $regex = (new Regex())->build();
             $subject($regex);
             $patternFromClosure = $regex->getPattern();
 
             $pattern = new SequencePatternFromClosure($patternFromClosure, $this->patterns, $this->startingPattern);
 
-        }else {
+        } else {
             $pattern = new SequencePatternFromScalar((string) $subject, $this->patterns, $this->startingPattern, $this->startFromBeginning);
         }
 
@@ -46,7 +46,7 @@ class Sequence
 
     public function startSequence(): void
     {
-        if($this->started) {
+        if ($this->started) {
             return;
         }
         $this->patterns[] = $this->startingPattern;
@@ -56,7 +56,7 @@ class Sequence
 
     public function endSequence(): void
     {
-        if($this->ended) {
+        if ($this->ended) {
             return;
         }
         $this->patterns[] = '))';

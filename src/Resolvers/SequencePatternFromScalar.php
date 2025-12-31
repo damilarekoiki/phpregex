@@ -18,7 +18,7 @@ class SequencePatternFromScalar implements Stringable
     public function __toString(): string
     {
         $pattern = '';
-        if($this->patterns !== [$this->startingPattern] && $this->startFromBeginning) {
+        if ($this->patterns !== [$this->startingPattern] && $this->startFromBeginning) {
             $pattern = '.*';
         }
         $pattern .= preg_quote((string) $this->subject, '/');

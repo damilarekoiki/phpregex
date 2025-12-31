@@ -5,13 +5,13 @@ namespace Ten\Phpregex;
 use BadMethodCallException;
 use Closure;
 use LogicException;
+use Ten\Phpregex\Expressions\Booleans;
 use Ten\Phpregex\Expressions\Contains;
+use Ten\Phpregex\Expressions\Flags;
+use Ten\Phpregex\Expressions\Helpers;
 use Ten\Phpregex\Expressions\Positional;
 use Ten\Phpregex\Expressions\Quantifiers;
 use Ten\Phpregex\Expressions\Sequential;
-use Ten\Phpregex\Expressions\Helpers;
-use Ten\Phpregex\Expressions\Flags;
-use Ten\Phpregex\Expressions\Booleans;
 
 class Regex
 {

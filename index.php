@@ -15,7 +15,7 @@ $regex = Regex::build(wholeString: true)
     ->sequence(function (Sequence $sequence): void {
         $sequence->then('banana')
             ->then(fn (Regex $regex) => $regex->not('d'))
-            ;
+        ;
     }, startFromBeginning: false)
     // ->or
     // ->group(function (Regex $regex): void {
@@ -32,7 +32,7 @@ $regex = Regex::build(wholeString: true)
     // ->contains('apple')
     // ->containsNonDigit()
     // ->addPattern('(?=.*a)(?=.*b)(?=.*(.*(.*apple).*(?=.*banana)))')
-    ;
+;
 
 echo $regex->get();
 
