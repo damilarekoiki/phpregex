@@ -1,9 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Ten\Phpregex\Expressions;
 
 use Closure;
-use Ten\Phpregex\Regex;
 
 /**
  * @property static $or Specifies alternatives
@@ -23,13 +23,13 @@ trait Booleans
             return $this;
         }
 
-        $pattern = $this->resolvePattern($subject);
+        $pattern = $this->resolveSimplePattern($subject);
         return $this->addPattern("(?=.*{$pattern})", false);
     }
 
     public function not(string|Closure $subject): self
     {
-        $pattern = $this->resolvePattern($subject);
+        $pattern = $this->resolveSimplePattern($subject);
         return $this->addPattern("(?!{$pattern})", false);
     }
 
@@ -40,16 +40,5 @@ trait Booleans
         }
 
         return $this;
-    }
-
-    private function resolvePattern(string|Closure $subject): string
-    {
-        if ($subject instanceof Closure) {
-            $regex = (new Regex())->build();
-            $subject($regex);
-            return $regex->getPattern();
-        }
-
-        return preg_quote((string) $subject, '/');
     }
 }

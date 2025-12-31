@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ten\Phpregex;
 
@@ -6,7 +7,7 @@ use Closure;
 use Ten\Phpregex\Resolvers\SequencePatternFromClosure;
 use Ten\Phpregex\Resolvers\SequencePatternFromScalar;
 
-class Sequence
+final class Sequence
 {
     /**
      * @var array<int, string>
@@ -14,12 +15,10 @@ class Sequence
     private array $patterns = [];
     private bool $started = false;
     private bool $ended = false;
-    private string $startingPattern = '(?=.*(';
-    public function __construct(private Regex $regex, private bool $startFromBeginning = false)
+    private readonly string $startingPattern;
+    public function __construct(private readonly Regex $regex, private readonly bool $startFromBeginning = false)
     {
-        if ($startFromBeginning) {
-            $this->startingPattern = "(^(";
-        }
+        $this->startingPattern = $startFromBeginning ? "(^(" : '(?=.*(';
         $this->startSequence();
     }
 

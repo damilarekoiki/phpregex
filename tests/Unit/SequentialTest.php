@@ -39,20 +39,20 @@ test('then method scans from the beginning when startFromBeginning is true', fun
 
     $regex2 = Regex::build()
         ->sequence(function (Sequence $sequence): void {
-            $sequence->then(fn (Regex $regex) => $regex->contains('apple'))
+            $sequence->then(fn (Regex $regex): Regex => $regex->contains('apple'))
                 ->then('banana');
         }, startFromBeginning: true);
 
     $regex3 = Regex::build()
         ->sequence(function (Sequence $sequence): void {
             $sequence->then('apple')
-                ->then(fn (Regex $regex) => $regex->contains('banana'));
+                ->then(fn (Regex $regex): Regex => $regex->contains('banana'));
         }, startFromBeginning: true);
 
     $regex4 = Regex::build()
         ->sequence(function (Sequence $sequence): void {
-            $sequence->then(fn (Regex $regex) => $regex->contains('apple'))
-                ->then(fn (Regex $regex) => $regex->contains('banana'));
+            $sequence->then(fn (Regex $regex): Regex => $regex->contains('apple'))
+                ->then(fn (Regex $regex): Regex => $regex->contains('banana'));
         }, startFromBeginning: true);
 
     expect($regex1->match('aapplebanana'))->toBeFalse();
@@ -77,20 +77,20 @@ test('then method scans from anywhere when startFromBeginning is false', functio
 
     $regex2 = Regex::build()
         ->sequence(function (Sequence $sequence): void {
-            $sequence->then(fn (Regex $regex) => $regex->contains('apple'))
+            $sequence->then(fn (Regex $regex): Regex => $regex->contains('apple'))
                 ->then('banana');
         }, startFromBeginning: false);
 
     $regex3 = Regex::build()
         ->sequence(function (Sequence $sequence): void {
             $sequence->then('apple')
-                ->then(fn (Regex $regex) => $regex->contains('banana'));
+                ->then(fn (Regex $regex): Regex => $regex->contains('banana'));
         }, startFromBeginning: false);
 
     $regex4 = Regex::build()
         ->sequence(function (Sequence $sequence): void {
-            $sequence->then(fn (Regex $regex) => $regex->contains('apple'))
-                ->then(fn (Regex $regex) => $regex->contains('banana'));
+            $sequence->then(fn (Regex $regex): Regex => $regex->contains('apple'))
+                ->then(fn (Regex $regex): Regex => $regex->contains('banana'));
         }, startFromBeginning: false);
 
     expect($regex1->match('aapplebanana'))->toBeTrue();
@@ -106,11 +106,11 @@ test('then method scans from anywhere when startFromBeginning is false', functio
     expect($regex4->match('applebanana'))->toBeTrue();
 });
 
-test('not works in sequence', function () {
+test('not works in sequence', function (): void {
     $regex = Regex::build()
         ->sequence(function (Sequence $sequence): void {
             $sequence->then('apple')
-                ->then(fn (Regex $regex) => $regex->not('banana'));
+                ->then(fn (Regex $regex): Regex => $regex->not('banana'));
         });
 
     // It should match 'apple cherry' because it doesn't have 'banana' after 'apple'

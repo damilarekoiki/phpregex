@@ -3,7 +3,7 @@
 use Ten\Phpregex\Regex;
 use Ten\Phpregex\Sequence;
 
-test('wholeString works with contains (literal when first)', function () {
+test('wholeString works with contains (literal when first)', function (): void {
     $regex = Regex::build(wholeString: true)->contains('a');
     
     // Pattern should be ^a$
@@ -12,7 +12,7 @@ test('wholeString works with contains (literal when first)', function () {
     expect($regex->match('apple'))->toBeTrue();
 });
 
-test('wholeString works with consuming patterns', function () {
+test('wholeString works with consuming patterns', function (): void {
     $regex = Regex::build(wholeString: true)->addPattern('apple');
     
     expect($regex->getPattern())->toBe('^apple$');
@@ -20,9 +20,9 @@ test('wholeString works with consuming patterns', function () {
     expect($regex->match('apple pie'))->toBeFalse();
 });
 
-test('wholeString works with sequence (lookahead)', function () {
+test('wholeString works with sequence (lookahead)', function (): void {
     $regex = Regex::build(wholeString: true)
-        ->sequence(function (Sequence $sequence) {
+        ->sequence(function (Sequence $sequence): void {
             $sequence->then('a')->then('p');
         }, startFromBeginning: false);
     
@@ -32,9 +32,9 @@ test('wholeString works with sequence (lookahead)', function () {
     expect($regex->match('banana'))->toBeFalse();
 });
 
-test('wholeString works with sequence (consuming)', function () {
+test('wholeString works with sequence (consuming)', function (): void {
     $regex = Regex::build(wholeString: true)
-        ->sequence(function (Sequence $sequence) {
+        ->sequence(function (Sequence $sequence): void {
             $sequence->then('a')->then('p');
         }, startFromBeginning: true);
     
@@ -44,7 +44,7 @@ test('wholeString works with sequence (consuming)', function () {
     expect($regex->match('apple'))->toBeFalse();
 });
 
-test('wholeString works with doesntContain', function () {
+test('wholeString works with doesntContain', function (): void {
     $regex = Regex::build(wholeString: true)->doesntContain('a');
     
     expect($regex->getPattern())->toBe('^(?!.*a).*$');

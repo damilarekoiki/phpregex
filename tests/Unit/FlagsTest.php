@@ -2,18 +2,18 @@
 
 use Ten\Phpregex\Regex;
 
-test('global ignoreCase flag', function () {
+test('global ignoreCase flag', function (): void {
     $regex = Regex::build()->addPattern('abc')->ignoreCase();
     expect($regex->get())->toBe('/abc/i');
     expect($regex->match('ABC'))->toBeTrue();
 });
 
-test('global multiline flag', function () {
+test('global multiline flag', function (): void {
     $regex = Regex::build()->addPattern('abc')->multiline();
     expect($regex->get())->toBe('/abc/m');
 });
 
-test('multiple global flags', function () {
+test('multiple global flags', function (): void {
     $regex = Regex::build()->addPattern('abc')->ignoreCase()->multiline();
     $pattern = $regex->get();
     expect($pattern)->toContain('/abc/')
@@ -21,7 +21,7 @@ test('multiple global flags', function () {
         ->and($pattern)->toContain('m');
 });
 
-test('local ignoreCase flag with string', function () {
+test('local ignoreCase flag with string', function (): void {
     $regex = Regex::build()->ignoreCaseFor('abc')->addPattern('DEF');
     expect($regex->getPattern())->toBe('(?i:abc)DEF');
     expect($regex->match('abcDEF'))->toBeTrue()
@@ -29,13 +29,13 @@ test('local ignoreCase flag with string', function () {
         ->and($regex->match('abcdef'))->toBeFalse();
 });
 
-test('local ignoreCase flag with closure', function () {
-    $regex = Regex::build()->ignoreCaseFor(fn(Regex $r) => $r->addPattern('abc'))->addPattern('DEF');
+test('local ignoreCase flag with closure', function (): void {
+    $regex = Regex::build()->ignoreCaseFor(fn(Regex $r): Regex => $r->addPattern('abc'))->addPattern('DEF');
     expect($regex->getPattern())->toBe('(?i:abc)DEF');
     expect($regex->match('ABCDEF'))->toBeTrue();
 });
 
-test('complex combined flags', function () {
+test('complex combined flags', function (): void {
     $regex = Regex::build()
         ->ignoreCaseFor('head')
         ->addPattern('Body')
@@ -46,7 +46,7 @@ test('complex combined flags', function () {
         ->and($regex->match('headbody'))->toBeFalse();
 });
 
-test('utf8 flag', function () {
+test('utf8 flag', function (): void {
     $regex = Regex::build()->addPattern('🚀')->utf8();
     expect($regex->get())->toBe('/🚀/u');
 });

@@ -1,15 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace Ten\Phpregex\Resolvers;
 
 use Stringable;
 
-class SequencePatternFromClosure implements Stringable
+final readonly class SequencePatternFromClosure implements Stringable
 {
     /**
-     * @param string $patternFromClosure
      * @param array<int, string> $patterns
-     * @param string $startingPattern
      */
     public function __construct(private string $patternFromClosure, private array $patterns, private string $startingPattern)
     {
@@ -25,15 +24,11 @@ class SequencePatternFromClosure implements Stringable
             if (str_starts_with($patternFromClosure, '(?=')) {
                 $patternFromClosure = substr($patternFromClosure, 3, -1);
             }
-        } else {
+        } elseif (!str_starts_with($patternFromClosure, '(?=') && !str_starts_with($patternFromClosure, '(?!')) {
             // Don't prepend .* if it's a lookahead
-            if (!str_starts_with($patternFromClosure, '(?=') && !str_starts_with($patternFromClosure, '(?!')) {
-                $pattern = '.*';
-            }
+            $pattern = '.*';
         }
 
-        $pattern .= $patternFromClosure;
-
-        return $pattern;
+        return $pattern . $patternFromClosure;
     }
 }

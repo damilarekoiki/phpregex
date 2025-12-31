@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ten\Phpregex\Expressions;
 
@@ -102,7 +103,7 @@ trait Helpers
 
     public function time(): self
     {
-        $this->patterns[] = "[0-2][0-9]:[0-5][0-9]:[0-5][0-9]";
+        $this->patterns[] = "[0-2]\\d:[0-5]\\d:[0-5]\\d";
         return $this;
     }
 

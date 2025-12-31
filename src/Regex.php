@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ten\Phpregex;
 
@@ -13,7 +14,7 @@ use Ten\Phpregex\Expressions\Positional;
 use Ten\Phpregex\Expressions\Quantifiers;
 use Ten\Phpregex\Expressions\Sequential;
 
-class Regex
+final class Regex
 {
     use Contains;
     use Positional;
@@ -31,14 +32,19 @@ class Regex
     /**
      * @var array<int, string>
      */
-    private array $magicMethods = [
-        'or',
-        'and',
-        'not',
-    ];
+    private readonly array $magicMethods;
 
     private bool $wholeString = false;
     private bool $isConsuming = false;
+
+    public function __construct()
+    {
+        $this->magicMethods = [
+            'or',
+            'and',
+            'not',
+        ];
+    }
 
     public static function build(bool $wholeString = false): self
     {
@@ -78,6 +84,17 @@ class Regex
         return $this->{$name}();
     }
 
+    private function resolveSimplePattern(string|Closure $subject): string
+    {
+        if ($subject instanceof Closure) {
+            $regex = (new self())->build();
+            $subject($regex);
+            return $regex->getPattern();
+        }
+
+        return preg_quote($subject, '/');
+    }
+
     private function resolve(): string
     {
         return '/' . $this->getPattern() . '/' . implode('', array_unique($this->flags ?? []));
@@ -114,7 +131,6 @@ class Regex
 
     /**
      * Indicates that the pattern should match the entire string
-     * @return Regex
      */
     public function wholeString(): self
     {
@@ -124,6 +140,6 @@ class Regex
 
     public function isFirst(): bool
     {
-        return empty($this->patterns);
+        return $this->patterns === [];
     }
 }
