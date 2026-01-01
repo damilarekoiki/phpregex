@@ -26,3 +26,14 @@ test('containsZeroOrOne method works', function (): void {
     
     expect(Regex::build()->containsZeroOrOne('')->getPattern())->toBe('(?=.*?)');
 });
+test('chains all quantifier methods', function (): void {
+    $regex = Regex::build()
+        ->containsAtleastOne('a')
+        ->containsZeroOrMore('b')
+        ->containsZeroOrOne('c');
+
+    expect($regex->getPattern())->toBe('(?=.*a+)(?=.*b*)(?=.*c?)');
+    expect($regex->match('apple'))->toBeTrue()
+        ->and($regex->match('ab'))->toBeTrue()
+        ->and($regex->match('bc'))->toBeFalse();
+});

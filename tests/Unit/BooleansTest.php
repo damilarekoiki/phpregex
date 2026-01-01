@@ -86,3 +86,17 @@ test('flags are restored in resolve', function (): void {
     $regex = Regex::build()->addPattern('abc')->ignoreCase();
     expect($regex->get())->toBe('/abc/i');
 });
+test('chains all boolean methods', function (): void {
+    $regex = Regex::build()
+        ->addPattern('A')
+        ->and('B')
+        ->not(fn(Regex $r) => $r->contains('C'))
+        ->or()
+        ->addPattern('D')
+        ->when(true, fn(Regex $r) => $r->addPattern('E'));
+
+    expect($regex->getPattern())->toBe('A(?=.*B)(?!(?=.*C))|DE');
+    expect($regex->match('AB'))->toBeTrue()
+        ->and($regex->match('ABC'))->toBeFalse()
+        ->and($regex->match('DE'))->toBeTrue();
+});

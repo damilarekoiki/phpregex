@@ -67,7 +67,7 @@ trait Contains
 
     public function doesntContainDigit(): self
     {
-        return $this->addPattern('(?!.*\d)', false);
+        return $this->addPattern('^(?!.*\d).+$', false);
     }
 
     public function containsOnlyDigits(): self

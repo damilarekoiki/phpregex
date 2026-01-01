@@ -29,3 +29,21 @@ test('endsWith method works', function (): void {
     expect($regex->match('hello world'))->toBeTrue()
         ->and($regex->match('world is round'))->toBeFalse();
 });
+test('chains all positional methods', function (): void {
+    $regex = Regex::build()
+        ->beginsWith('A')
+        ->between('B', 'D')
+        ->between('m', 'q', caseSensitive: false)
+        ->notBetween('E', 'G', caseSensitive: false)
+        ->notBetween('r', 't')
+        ->endsWith('Z');
+
+    expect($regex->getPattern())->toBe('^A[B-D][m-qM-Q][^e-gE-G][^r-t].*Z$');
+    expect($regex->match('ABmPHZ'))->toBeTrue()
+        ->and($regex->match('ACNyfZ'))->toBeTrue()
+        ->and($regex->match('ACpysZ'))->toBeFalse()
+        ->and($regex->match('ACpySZ'))->toBeTrue()
+        ->and($regex->match('AEHZ'))->toBeFalse()
+        ->and($regex->match('ACnfDZ'))->toBeFalse()
+        ->and($regex->match('XBZ'))->toBeFalse();
+});
