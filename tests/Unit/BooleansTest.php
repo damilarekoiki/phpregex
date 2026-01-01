@@ -90,10 +90,10 @@ test('chains all boolean methods', function (): void {
     $regex = Regex::build()
         ->addPattern('A')
         ->and('B')
-        ->not(fn(Regex $r) => $r->contains('C'))
+        ->not(fn(Regex $r): Regex => $r->contains('C'))
         ->or()
         ->addPattern('D')
-        ->when(true, fn(Regex $r) => $r->addPattern('E'));
+        ->when(true, fn(Regex $r): Regex => $r->addPattern('E'));
 
     expect($regex->getPattern())->toBe('A(?=.*B)(?!(?=.*C))|DE');
     expect($regex->match('AB'))->toBeTrue()
