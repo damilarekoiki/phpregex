@@ -7,16 +7,16 @@ trait Quantifiers
 {
     public function containsAtleastOne(string|int $subject): self
     {
-        return $this->addPattern($subject . "+");
+        return $this->addPattern('(?=.*' . preg_quote((string) $subject, '/') . '+)', false);
     }
 
     public function containsZeroOrMore(string|int $subject): self
     {
-        return $this->addPattern($subject . "*");
+        return $this->addPattern('(?=.*' . preg_quote((string) $subject, '/') . '*)', false);
     }
 
     public function containsZeroOrOne(string|int $subject): self
     {
-        return $this->addPattern($subject . "?");
+        return $this->addPattern('(?=.*' . preg_quote((string) $subject, '/') . '?)', false);
     }
 }

@@ -6,7 +6,6 @@ use Ten\Phpregex\Sequence;
 test('wholeString works with contains (literal when first)', function (): void {
     $regex = Regex::build(wholeString: true)->contains('a');
     
-    // Pattern should be ^a$
     expect($regex->getPattern())->toBe('^(?=.*a).*$');
     expect($regex->match('a'))->toBeTrue();
     expect($regex->match('apple'))->toBeTrue();

@@ -33,10 +33,10 @@ test('and method with argument works as a lookahead', function (): void {
 });
 
 test('not method works as a negative lookahead', function (): void {
-    $regex = Regex::build()->beginsWith('')->not('cherry');
-    expect($regex->getPattern())->toBe('^(?!cherry)');
-    expect($regex->match('applebanana'))->toBeTrue()
-        ->and($regex->match('cherryapple'))->toBeFalse();
+    $regex = Regex::build()->beginsWith('2')->not('cherry');
+    expect($regex->getPattern())->toBe('^2(?!cherry)');
+    expect($regex->match('2applebanana'))->toBeTrue()
+        ->and($regex->match('2cherryapple'))->toBeFalse();
 });
 
 test('not method with closure works', function (): void {

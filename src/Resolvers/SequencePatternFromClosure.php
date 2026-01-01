@@ -20,15 +20,12 @@ final readonly class SequencePatternFromClosure implements Stringable
 
         $isFirst = $this->patterns === [$this->startingPattern];
 
-        if ($isFirst) {
-            if (str_starts_with($patternFromClosure, '(?=')) {
-                $patternFromClosure = substr($patternFromClosure, 3, -1);
-            }
+        if (str_starts_with($patternFromClosure, '(?=')) {
+            $patternFromClosure = substr($patternFromClosure, 3, -1);
         } elseif (!str_starts_with($patternFromClosure, '(?=') && !str_starts_with($patternFromClosure, '(?!')) {
-            // Don't prepend .* if it's a lookahead
             $pattern = '.*';
         }
 
-        return $pattern . $patternFromClosure;
+        return $pattern . '(' . $patternFromClosure . ')';
     }
 }

@@ -1,0 +1,38 @@
+#!/bin/sh
+
+echo "Running pre-commit hooks..."
+
+# Run PHP CS Fixer
+echo "Running PHP CS Fixer..."
+vendor/bin/php-cs-fixer check
+if [ $? -ne 0 ]; then
+    echo "PHP CS Fixer failed. Please fix style issues."
+    exit 1
+fi
+
+# Run PHPStan
+echo "Running PHPStan..."
+vendor/bin/phpstan analyse
+if [ $? -ne 0 ]; then
+    echo "PHPStan failed. Please fix static analysis issues."
+    exit 1
+fi
+
+# Run Rector
+echo "Running Rector..."
+vendor/bin/rector process --dry-run
+if [ $? -ne 0 ]; then
+    echo "Rector failed. Please check refactoring suggestions."
+    exit 1
+fi
+
+# Run Pest
+echo "Running Pest..."
+vendor/bin/pest
+if [ $? -ne 0 ]; then
+    echo "Pest tests failed. Please fix failing tests."
+    exit 1
+fi
+
+echo "All checks passed! Proceeding with commit."
+exit 0

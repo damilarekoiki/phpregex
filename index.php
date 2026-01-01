@@ -34,8 +34,11 @@ $regex = Regex::build(wholeString: true)
     // ->addPattern('(?=.*a)(?=.*b)(?=.*(.*(.*apple).*(?=.*banana)))')
 ;
 
+$regex = Regex::build(wholeString: true)
+        ->slug();
+
 echo $regex->get();
 
-$regexMatch = $regex->match('bbanana2apple');
+$regexMatch = $regex->match('this-slug');
 
 echo $regexMatch ? 'Match' : 'No Match';

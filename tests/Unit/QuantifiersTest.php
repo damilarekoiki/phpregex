@@ -1,0 +1,28 @@
+<?php
+
+use Ten\Phpregex\Regex;
+
+test('containsAtleastOne method works', function (): void {
+    $regex = Regex::build()->containsAtleastOne('a');
+    expect($regex->getPattern())->toBe('(?=.*a+)');
+    expect($regex->match('apple'))->toBeTrue()
+        ->and($regex->match('cherry'))->toBeFalse();
+    
+    expect(Regex::build()->containsAtleastOne('')->getPattern())->toBe('(?=.*+)');
+});
+
+test('containsZeroOrMore method works', function (): void {
+    $regex = Regex::build()->containsZeroOrMore('a');
+    expect($regex->getPattern())->toBe('(?=.*a*)');
+    expect($regex->match('anything'))->toBeTrue();
+    
+    expect(Regex::build()->containsZeroOrMore('')->getPattern())->toBe('(?=.**)');
+});
+
+test('containsZeroOrOne method works', function (): void {
+    $regex = Regex::build()->containsZeroOrOne('a');
+    expect($regex->getPattern())->toBe('(?=.*a?)');
+    expect($regex->match('anything'))->toBeTrue();
+    
+    expect(Regex::build()->containsZeroOrOne('')->getPattern())->toBe('(?=.*?)');
+});
