@@ -32,13 +32,13 @@ final class Sequence
             $subject($regex);
             $patternFromClosure = $regex->getPattern();
 
-            $pattern = new SequencePatternFromClosure($patternFromClosure, $this->patterns, $this->startingPattern);
+            $pattern = new SequencePatternFromClosure($patternFromClosure);
 
         } else {
             $pattern = new SequencePatternFromScalar((string) $subject, $this->patterns, $this->startingPattern, $this->startFromBeginning);
         }
 
-        $this->patterns[] = $pattern;
+        $this->patterns[] = (string) $pattern;
         $this->regex->addPattern((string) $pattern, $this->startFromBeginning);
 
         return $this;

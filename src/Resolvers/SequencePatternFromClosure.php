@@ -8,10 +8,7 @@ use Stringable;
 
 final readonly class SequencePatternFromClosure implements Stringable
 {
-    /**
-     * @param array<int, string> $patterns
-     */
-    public function __construct(private string $patternFromClosure, private array $patterns, private string $startingPattern)
+    public function __construct(private string $patternFromClosure)
     {
     }
     public function __toString(): string
@@ -19,12 +16,12 @@ final readonly class SequencePatternFromClosure implements Stringable
         $pattern = '';
         $patternFromClosure = $this->patternFromClosure;
 
-        $isFirst = $this->patterns === [$this->startingPattern];
-
         if (str_starts_with($patternFromClosure, '(?=')) {
             $patternFromClosure = substr($patternFromClosure, 3, -1);
-        } elseif (!str_starts_with($patternFromClosure, '(?=') && !str_starts_with($patternFromClosure, '(?!')) {
-            $pattern = '.*';
+        } else {
+            if (!str_starts_with($patternFromClosure, '(?!')) {
+                $pattern = '.*';
+            }
         }
 
         return $pattern . '(' . $patternFromClosure . ')';

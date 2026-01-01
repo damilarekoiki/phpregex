@@ -8,21 +8,21 @@ trait Positional
 {
     public function between(string|int $subject1, string|int $subject2, bool $caseSensitive): self
     {
-        return $this->addPattern("[" . preg_quote($subject1, '/') . "-" . preg_quote($subject2, '/') . "]");
+        return $this->addPattern("[" . preg_quote((string) $subject1, '/') . "-" . preg_quote((string) $subject2, '/') . "]");
     }
 
     public function notBetween(string|int $subject1, string|int $subject2): self
     {
-        return $this->addPattern("[^" . preg_quote($subject1, '/') . "-" . preg_quote($subject2, '/') . "]");
+        return $this->addPattern("[^" . preg_quote((string) $subject1, '/') . "-" . preg_quote((string) $subject2, '/') . "]");
     }
 
     public function beginsWith(string|int $subject): self
     {
-        return $this->addPattern("^" . preg_quote($subject, '/'));
+        return $this->addPattern("^" . preg_quote((string) $subject, '/'));
     }
 
     public function endsWith(string|int $subject): self
     {
-        return $this->addPattern('.*' . preg_quote($subject, '/') . "$");
+        return $this->addPattern('.*' . preg_quote((string) $subject, '/') . "$");
     }
 }

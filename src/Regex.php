@@ -43,7 +43,6 @@ final class Regex
         $this->magicMethods = [
             'or',
             'and',
-            'not',
         ];
     }
 
