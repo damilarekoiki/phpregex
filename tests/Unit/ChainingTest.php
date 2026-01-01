@@ -198,3 +198,169 @@ test('arrow function works with not method', function (): void {
     
     expect($regex->getPattern())->toBe('(?!secret)');
 });
+test('massive chaining: positional and booleans coverage', function (): void {
+    $regex = Regex::build()
+        ->beginsWith('A')
+        ->between('B', 'D')
+        ->notBetween('X', 'Z')
+        ->and('test')
+        ->not('fail')
+        ->when(true, fn (Regex $r): Regex => $r->contains('ok'))
+        ->or->contains('alt')
+        ->endsWith('Z');
+
+    expect($regex->match('ACMtestokZ'))->toBeTrue()
+        ->and($regex->match('AYMtestokZ'))->toBeFalse()
+        ->and($regex->match('ACMfailokZ'))->toBeFalse();
+});
+
+test('massive chaining: contains methods coverage part 1', function (): void {
+    $regex = Regex::build()
+        ->contains('hello')
+        ->doesntContain('bye')
+        ->containsAnyOf(['a', 'e', 'i'])
+        ->containsDigit()
+        ->containsNonDigit();
+
+    expect($regex->match('hello123world'))->toBeTrue()
+        ->and($regex->match('hello123bye'))->toBeFalse()
+        ->and($regex->match('hxllo123world'))->toBeFalse();
+});
+
+test('massive chaining: contains methods coverage part 2', function (): void {
+    $regex = Regex::build()
+        ->containsAlphaNumeric()
+        ->containsWordsThatBeginWith('pre')
+        ->containsWordsThatEndWith('fix');
+
+    expect($regex->match('prefix is good'))->toBeTrue()
+        ->and($regex->match('the prefix works'))->toBeTrue()
+        ->and($regex->match('nothing here'))->toBeFalse();
+});
+
+test('massive chaining: contains methods coverage part 3', function (): void {
+    $regex = Regex::build()
+        ->containsLetter()
+        ->containsLowercaseLetter()
+        ->containsUppercaseLetter()
+        ->containsWhitespace()
+        ->containsNonWhitespace()
+        ->containsWordCharacter()
+        ->containsAnything();
+
+    expect($regex->match('Hello World'))->toBeTrue()
+        ->and($regex->match('hello world'))->toBeFalse()
+        ->and($regex->match('HELLO WORLD'))->toBeFalse();
+});
+
+test('massive chaining: quantifiers coverage', function (): void {
+    $regex = Regex::build()
+        ->containsAtleastOne('A')
+        ->containsZeroOrMore('B')
+        ->containsZeroOrOne('C');
+
+    expect($regex->match('AAABBBCCC'))->toBeTrue()
+        ->and($regex->match('AAA'))->toBeTrue()
+        ->and($regex->match('BBB'))->toBeFalse();
+});
+
+test('massive chaining: sequential coverage', function (): void {
+    $regex = Regex::build()
+        ->containsExactSequencesOf('A', 3)
+        ->containsSequencesOf('B', 2, 4)
+        ->containsAtleastSequencesOf('C', 2);
+
+    expect($regex->match('AAABBBBCC'))->toBeTrue()
+        ->and($regex->match('AABBCC'))->toBeFalse()
+        ->and($regex->match('AAABCC'))->toBeFalse();
+});
+
+test('massive chaining: helpers coverage part 1', function (): void {
+    $regex = Regex::build()
+        ->email();
+
+    expect($regex->match('test@example.com'))->toBeTrue()
+        ->and($regex->match('invalid-email'))->toBeFalse();
+
+    $regex2 = Regex::build()->url();
+    expect($regex2->match('https://example.com/path?query=1'))->toBeTrue();
+
+    $regex3 = Regex::build()->uuid();
+    expect($regex3->match('550e8400-e29b-41d4-a716-446655440000'))->toBeTrue();
+
+    $regex4 = Regex::build()->ipv4();
+    expect($regex4->match('192.168.1.1'))->toBeTrue();
+});
+
+test('massive chaining: helpers coverage part 2', function (): void {
+    $regex = Regex::build()
+        ->alpha();
+    expect($regex->match('HelloWorld'))->toBeTrue();
+
+    $regex2 = Regex::build()->alphanumeric();
+    expect($regex2->match('Test123'))->toBeTrue();
+
+    $regex3 = Regex::build()->digits();
+    expect($regex3->match('12345'))->toBeTrue();
+
+    $regex4 = Regex::build()->hexColor();
+    expect($regex4->match('#FF5733'))->toBeTrue();
+
+    $regex5 = Regex::build()->slug();
+    expect($regex5->match('my-awesome-slug'))->toBeTrue();
+});
+
+test('massive chaining: helpers coverage part 3', function (): void {
+    $regex = Regex::build()->creditCard();
+    expect($regex->match('4111-1111-1111-1111'))->toBeTrue();
+
+    $regex2 = Regex::build()->ssn();
+    expect($regex2->match('123-45-6789'))->toBeTrue();
+
+    $regex3 = Regex::build()->zipCode();
+    expect($regex3->match('12345'))->toBeTrue();
+
+    $regex4 = Regex::build()->macAddress();
+    expect($regex4->match('00:1A:2B:3C:4D:5E'))->toBeTrue();
+
+    $regex5 = Regex::build()->date();
+    expect($regex5->match('2024-01-15'))->toBeTrue();
+
+    $regex6 = Regex::build()->time();
+    expect($regex6->match('14:30:00'))->toBeTrue();
+
+    $regex7 = Regex::build()->handle();
+    expect($regex7->match('@username'))->toBeTrue();
+
+    $regex8 = Regex::build()->hex();
+    expect($regex8->match('DEADBEEF'))->toBeTrue();
+});
+
+test('massive chaining: flags coverage', function (): void {
+    $regex = Regex::build()
+        ->beginsWith('hello')
+        ->ignoreCase()
+        ->multiline();
+
+    expect($regex->match('HELLO world'))->toBeTrue();
+
+    $regex2 = Regex::build()
+        ->ignoreCaseFor('test')
+        ->utf8();
+
+    expect($regex2->match('TEST'))->toBeTrue();
+});
+
+test('massive chaining: doesnt methods coverage', function (): void {
+    $regex = Regex::build()
+        ->containsOnlyAlphaNumeric();
+
+    expect($regex->match('HelloWorld123'))->toBeTrue()
+        ->and($regex->match('Hello World!'))->toBeFalse();
+
+    $regex2 = Regex::build()
+        ->doesntContainAnyOf(['x', 'y', 'z']);
+
+    expect($regex2->match('hello world'))->toBeTrue()
+        ->and($regex2->match('xyz'))->toBeFalse();
+});

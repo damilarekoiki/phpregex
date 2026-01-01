@@ -122,7 +122,7 @@ test('containsExactSequencesOf method works', function (): void {
     expect($regex->getPattern())->toBe('a{3}');
     expect($regex->match('aaa'))->toBeTrue()
         ->and($regex->match('aa'))->toBeFalse()
-        ->and($regex->match('aaaa'))->toBeTrue(); // matches aaa within aaaa
+        ->and($regex->match('aaaa'))->toBeTrue();
 });
 
 test('containsSequencesOf method works', function (): void {
@@ -152,4 +152,89 @@ test('chains all sequential methods', function (): void {
     expect($regex->match('aabbc'))->toBeTrue()
         ->and($regex->match('abc'))->toBeFalse()
         ->and($regex->match('aabbcc'))->toBeTrue();
+});
+
+test('massive sequence: positional and contains coverage', function (): void {
+    $regex = Regex::build()
+        ->sequence(function (Sequence $s): void {
+            $s->then(fn (Regex $r): Regex => $r->beginsWith('A')->containsDigit())
+              ->then(fn (Regex $r): Regex => $r->between('B', 'D')->notBetween('X', 'Z'))
+              ->then(fn (Regex $r): Regex => $r->containsLetter())
+              ->then(fn (Regex $r): Regex => $r->endsWith('Z'));
+        }, startFromBeginning: true);
+
+    expect($regex->match('A1BmtestZ'))->toBeTrue()
+        ->and($regex->match('A1YmtestZ'))->toBeFalse()
+        ->and($regex->match('1BmtestZ'))->toBeFalse();
+});
+
+test('massive sequence: booleans and quantifiers coverage', function (): void {
+    $regex = Regex::build()
+        ->sequence(function (Sequence $s): void {
+            $s->then(fn (Regex $r): Regex => $r->containsAtleastOne('A'))
+              ->then(fn (Regex $r): Regex => $r->and('B')->not('X'))
+              ->then(fn (Regex $r): Regex => $r->containsZeroOrMore('C'))
+              ->then(fn (Regex $r): Regex => $r->containsZeroOrOne('D'));
+        });
+
+    expect($regex->match('AAABBCCCD'))->toBeTrue()
+        ->and($regex->match('AAAB'))->toBeTrue()
+        ->and($regex->match('BBB'))->toBeFalse();
+});
+
+test('massive sequence: sequential methods coverage', function (): void {
+    $regex = Regex::build()
+        ->sequence(function (Sequence $s): void {
+            $s->then(fn (Regex $r): Regex => $r->containsExactSequencesOf('A', 2))
+              ->then(fn (Regex $r): Regex => $r->containsSequencesOf('B', 2, 4))
+              ->then(fn (Regex $r): Regex => $r->containsAtleastSequencesOf('C', 3));
+        }, startFromBeginning: true);
+
+    expect($regex->match('AABBBBCCC'))->toBeTrue()
+        ->and($regex->match('AABBCC'))->toBeFalse()
+        ->and($regex->match('AAABBCCC'))->toBeTrue();
+});
+
+test('massive sequence: helpers coverage', function (): void {
+    $regex = Regex::build()
+        ->sequence(function (Sequence $s): void {
+            $s->then(fn (Regex $r): Regex => $r->beginsWith('ID:'))
+              ->then(fn (Regex $r): Regex => $r->digits())
+              ->then(fn (Regex $r): Regex => $r->alphanumeric())
+              ->then(fn (Regex $r): Regex => $r->email())
+              ->then(fn (Regex $r): Regex => $r->endsWith('.txt'));
+        }, startFromBeginning: true);
+
+    expect($regex->match('ID:123ABCtest@example.com.txt'))->toBeTrue()
+        ->and($regex->match('ID:123ABCtest@example.com.pdf'))->toBeFalse()
+        ->and($regex->match('123ABCtest@example.com.txt'))->toBeFalse();
+});
+
+test('massive sequence: contains methods coverage', function (): void {
+    $regex = Regex::build()
+        ->sequence(function (Sequence $s): void {
+            $s->then(fn (Regex $r): Regex => $r->contains('start'))
+              ->then(fn (Regex $r): Regex => $r->containsAlphaNumeric())
+              ->then(fn (Regex $r): Regex => $r->containsAnyOf(['x', 'y', 'z']))
+              ->then(fn (Regex $r): Regex => $r->contains('end'));
+        });
+
+    expect($regex->match('start123xyzend'))->toBeTrue()
+        ->and($regex->match('start123end'))->toBeFalse()
+        ->and($regex->match('begin123xyzend'))->toBeFalse();
+});
+
+test('massive sequence: flags coverage', function (): void {
+    $regex = Regex::build()
+        ->sequence(function (Sequence $s): void {
+            $s->then(fn (Regex $r): Regex => $r->beginsWith('Hello'))
+              ->then(fn (Regex $r): Regex => $r->containsLetter())
+              ->then(fn (Regex $r): Regex => $r->endsWith('World'));
+        }, startFromBeginning: true)
+        ->ignoreCase()
+        ->utf8();
+
+    expect($regex->match('HelloTestWorld'))->toBeTrue()
+        ->and($regex->match('HELLOTESTWORLD'))->toBeTrue()
+        ->and($regex->match('hello test world'))->toBeTrue();
 });

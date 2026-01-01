@@ -84,8 +84,6 @@ test('alphanumeric methods work', function (): void {
 
     expect(Regex::build()->doesntContainOnlyAlphaNumeric()->getPattern())->toBe('[^A-Za-z0-9]');
     expect(Regex::build()->doesntContainOnlyAlphaNumeric()->match('abc-123'))->toBeTrue()
-        // wait, doesntContainOnlyAlphaNumeric pattern is [^A-Za-z0-9]
-        // This means it matches IF there is at least ONE non-alphanumeric character.
         ->and(Regex::build()->doesntContainOnlyAlphaNumeric()->match('abc123'))->toBeFalse();
 });
 
@@ -143,16 +141,8 @@ test('chains various contains and doesnt methods', function (): void {
         ->containsWordCharacter()
         ->containsNonWordCharacter()
         ->containsAnything();
-
-    // Pattern structure: (?=.*\d)^(?!.*\d).+$(?=.*[a-z])(?=.*[A-Z])(?=.*\s)(?=.*\S)(?=.*\w)(?=.*\W)(?=.*.)
-    // Note: doesntContainDigit uses ^(?!.*\d).+$ which anchors the pattern.
-    // Subsequent contains* add lookaheads.
     
     expect($regex->getPattern())->toBe('(?=.*\d)^(?!.*\d).+$(?=.*[a-z])(?=.*[A-Z])(?=.*\s)(?=.*\S)(?=.*\w)(?=.*\W)(?=.*.)');
-    
-    // This specific combination might be hard to match but we are testing the fluent interface.
-    // Actually, (?=.*\d) and ^(?!.*\d) are contradictory.
-    // Let's use a more realistic chain for matching.
     
     $regex2 = Regex::build()
         ->containsDigit()
