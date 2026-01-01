@@ -31,9 +31,9 @@ test('chaining contains and or', function (): void {
 
 test('complex sequence chaining', function (): void {
     $regex = Regex::build()
-        ->sequence(function (Sequence $s) {
+        ->sequence(function (Sequence $s): void {
             $s->then('foo')
-              ->then(fn (Regex $r) => $r->containsAnyOf(['bar', 'baz']))
+              ->then(fn (Regex $r): Regex => $r->containsAnyOf(['bar', 'baz']))
               ->then('qux');
         });
     
@@ -58,7 +58,7 @@ test('chaining when with complex logic', function (): void {
     $isEnabled = true;
     $regex = Regex::build()
         ->addPattern('prefix')
-        ->when($isEnabled, function (Regex $r) {
+        ->when($isEnabled, function (Regex $r): void {
             $r->addPattern('-middle')->ignoreCase();
         })
         ->addPattern('-suffix');
@@ -96,10 +96,10 @@ test('chaining between and containsAtleastOne', function (): void {
 
 test('grouping with quantifiers and or', function (): void {
     $regex = Regex::build()
-        ->group(fn (Regex $r) => $r->addPattern('abc'))
+        ->group(fn (Regex $r): Regex => $r->addPattern('abc'))
         ->containsAtleastOne('n')
         ->or()
-        ->group(fn (Regex $r) => $r->addPattern('xyz'))
+        ->group(fn (Regex $r): Regex => $r->addPattern('xyz'))
         ->containsZeroOrMore('m');
     
     expect($regex->getPattern())->toBe('(abc)(?=.*n+)|(xyz)(?=.*m*)');
@@ -113,10 +113,10 @@ test('grouping with quantifiers and or', function (): void {
 
 test('complex sequence with not lookahead trailing', function (): void {
     $regex = Regex::build()
-        ->sequence(function (Sequence $s) {
+        ->sequence(function (Sequence $s): void {
             $s->then('user_')
               ->then('123')
-              ->then(fn (Regex $r) => $r->not('_admin'));
+              ->then(fn (Regex $r): Regex => $r->not('_admin'));
         });
     
     expect($regex->match('user_123'))->toBeTrue()
@@ -137,9 +137,9 @@ test('chaining with multiple lookaheads and consuming patterns', function (): vo
 
 test('nested grouping and complex quantifiers', function (): void {
     $regex = Regex::build()
-        ->group(function (Regex $r) {
+        ->group(function (Regex $r): void {
             $r->addPattern('a')
-              ->group(fn (Regex $r2) => $r2->addPattern('b')->or()->addPattern('c'))
+              ->group(fn (Regex $r2): Regex => $r2->addPattern('b')->or()->addPattern('c'))
               ->addPattern('d');
         })
         ->containsAtleastSequencesOf('', 2);
@@ -152,7 +152,7 @@ test('nested grouping and complex quantifiers', function (): void {
 
 test('wholeString with sequence and booleans', function (): void {
     $regex = Regex::build(true)
-        ->sequence(function (Sequence $s) {
+        ->sequence(function (Sequence $s): void {
             $s->then('foo')->then('bar');
         }, true)
         ->or()
@@ -170,7 +170,7 @@ test('wholeString with sequence and booleans', function (): void {
 test('arrow function works with when method', function (): void {
     $regex = Regex::build()
         ->addPattern('prefix')
-        ->when(true, fn(Regex $r) => $r->addPattern('-middle'))
+        ->when(true, fn(Regex $r): Regex => $r->addPattern('-middle'))
         ->addPattern('-suffix');
     
     expect($regex->getPattern())->toBe('prefix-middle-suffix');
@@ -178,7 +178,7 @@ test('arrow function works with when method', function (): void {
 
 test('arrow function works with sequence method', function (): void {
     $regex = Regex::build()
-        ->sequence(fn(Sequence $s) => $s->then('a')->then('b'));
+        ->sequence(fn(Sequence $s): Sequence => $s->then('a')->then('b'));
     
     expect($regex->getPattern())->toBe('(?=.*(ab))');
 });
@@ -194,7 +194,7 @@ test('arrow function works with inclusive methods', function (): void {
 
 test('arrow function works with not method', function (): void {
     $regex = Regex::build()
-        ->not(fn(Regex $r) => $r->addPattern('secret'));
+        ->not(fn(Regex $r): Regex => $r->addPattern('secret'));
     
     expect($regex->getPattern())->toBe('(?!secret)');
 });

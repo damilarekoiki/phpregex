@@ -18,10 +18,8 @@ final readonly class SequencePatternFromClosure implements Stringable
 
         if (str_starts_with($patternFromClosure, '(?=')) {
             $patternFromClosure = substr($patternFromClosure, 3, -1);
-        } else {
-            if (!str_starts_with($patternFromClosure, '(?!')) {
-                $pattern = '.*';
-            }
+        } elseif (!str_starts_with($patternFromClosure, '(?!')) {
+            $pattern = '.*';
         }
 
         return $pattern . '(' . $patternFromClosure . ')';
