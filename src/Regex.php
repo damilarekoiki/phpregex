@@ -105,7 +105,7 @@ final class Regex
         return $this->{$name}();
     }
 
-    private function resolveSimplePattern(string|Closure $subject): string
+    private function resolveSimplePattern(string|int|Closure $subject): string
     {
         if ($subject instanceof Closure) {
             $regex = (new self())->build();
@@ -113,7 +113,7 @@ final class Regex
             return $regex->getPattern();
         }
 
-        return preg_quote($subject, '/');
+        return preg_quote((string) $subject, '/');
     }
 
     private function resolve(): string

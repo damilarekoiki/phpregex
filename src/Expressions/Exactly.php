@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Ten\Phpregex\Expressions;
 
 use function is_array;
-use function is_string;
 
 trait Exactly
 {
     /**
-     * @param string|array<int|string> $chars
+     * @param string|int|array<int|string> $chars
      */
-    public function anyOf(string|array $chars): self
+    public function anyOf(string|int|array $chars): self
     {
         if (empty($chars)) {
             return $this;
@@ -23,12 +22,8 @@ trait Exactly
             return $this->addPattern('(' . implode("|", $chars) . ')');
         }
 
-        if (is_string($chars)) {
-            $chars = preg_quote($chars, '/');
-            return $this->addPattern("[{$chars}]");
-        }
-
-        return $this;
+        $chars = preg_quote((string) $chars, '/');
+        return $this->addPattern("[{$chars}]");
     }
 
     public function digit(): self

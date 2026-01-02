@@ -8,7 +8,7 @@ test('contains method vs then method', function (): void {
     expect($regex->match('apple fruit'))->toBeTrue();
     expect($regex->match('applebanana'))->toBeTrue();
 
-    $consuming = Regex::build()->then('apple')->then(fn(Regex $regex)=> $regex->between(['f'=> 'h']));
+    $consuming = Regex::build()->then('apple')->then(fn(Regex $regex): Regex=> $regex->between(['f'=> 'h']));
     expect($consuming->count('applefruit apple pie appleg'))->toBe(2);
 });
 
