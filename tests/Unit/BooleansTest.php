@@ -8,6 +8,9 @@ test('or method works', function (): void {
     expect($regex->match('apple'))->toBeTrue()
         ->and($regex->match('banana'))->toBeTrue()
         ->and($regex->match('cherry'))->toBeFalse();
+
+    expect($regex->count('apple banana cherry'))->toBe(2);
+    expect($regex->replace('apple banana', 'fruit'))->toBe('fruit fruit');
 });
 
 test('or property works', function (): void {
@@ -37,6 +40,9 @@ test('not method works as a negative lookahead', function (): void {
     expect($regex->getPattern())->toBe('^2(?!cherry)');
     expect($regex->match('2applebanana'))->toBeTrue()
         ->and($regex->match('2cherryapple'))->toBeFalse();
+
+    expect($regex->count('2apple 2cherry'))->toBe(1);
+    expect($regex->replace('2apple', 'number'))->toBe('numberapple');
 });
 
 test('not method with closure works', function (): void {
@@ -56,6 +62,9 @@ test('complex boolean combination', function (): void {
     expect($regex->match('apple'))->toBeTrue()
         ->and($regex->match('applebanana'))->toBeFalse()
         ->and($regex->match('cherry'))->toBeTrue();
+
+    expect($regex->count('apple applebanana cherry'))->toBe(2);
+    expect($regex->replace('apple cherry', 'fruit'))->toBe('fruit fruit');
 });
 
 test('when method works with true condition', function (): void {

@@ -17,6 +17,9 @@ test('wholeString works with consuming patterns', function (): void {
     expect($regex->getPattern())->toBe('^apple$');
     expect($regex->match('apple'))->toBeTrue();
     expect($regex->match('apple pie'))->toBeFalse();
+
+    expect($regex->count('apple'))->toBe(1);
+    expect($regex->replace('apple', 'orange'))->toBe('orange');
 });
 
 test('wholeString works with sequence (lookahead)', function (): void {
@@ -41,6 +44,9 @@ test('wholeString works with sequence (consuming)', function (): void {
     expect($regex->match('ap'))->toBeTrue();
     expect($regex->match('app'))->toBeTrue();
     expect($regex->match('apple'))->toBeFalse();
+
+    expect($regex->count('app'))->toBe(1);
+    expect($regex->replace('app', 'X'))->toBe('X');
 });
 
 test('wholeString works with doesntContain', function (): void {

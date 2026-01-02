@@ -7,6 +7,9 @@ test('email helper', function (): void {
     expect($regex->match('test@example.com'))->toBeTrue()
         ->and($regex->match('user.name+tag@domain.co.uk'))->toBeTrue()
         ->and($regex->match('invalid-email'))->toBeFalse();
+
+    expect($regex->count('test@example.com'))->toBe(1);
+    expect($regex->replace('test@example.com', 'REPLACED'))->toBe('REPLACED');
 });
 
 test('ipv4 helper', function (): void {
@@ -39,18 +42,19 @@ test('alpha helper', function (): void {
     $regex = Regex::build(wholeString: true)->alpha();
     expect($regex->match('abcABC'))->toBeTrue()
         ->and($regex->match('abc123'))->toBeFalse();
-});
 
-test('alphanumeric helper', function (): void {
-    $regex = Regex::build(wholeString: true)->alphanumeric();
-    expect($regex->match('abc123ABC'))->toBeTrue()
-        ->and($regex->match('abc-123'))->toBeFalse();
+    expect($regex->count('abcABC'))->toBe(1);
+    expect($regex->replace('abcABC', 'letters'))->toBe('letters');
 });
 
 test('digits helper', function (): void {
     $regex = Regex::build(wholeString: true)->digits();
     expect($regex->match('123456'))->toBeTrue()
         ->and($regex->match('123a45'))->toBeFalse();
+
+    $noWhole = Regex::build()->digits();
+    expect($noWhole->count('123 abc 456'))->toBe(2);
+    expect($noWhole->replace('123 abc 456', 'X'))->toBe('X abc X');
 });
 
 test('hex color helper', function (): void {

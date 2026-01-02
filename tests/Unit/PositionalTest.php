@@ -7,6 +7,9 @@ test('between method works', function (): void {
     expect($regex->getPattern())->toBe('[a-z]');
     expect($regex->match('m'))->toBeTrue()
         ->and($regex->match('1'))->toBeFalse();
+
+    expect($regex->count('abc 123 def'))->toBe(6);
+    expect($regex->replace('abc', 'X'))->toBe('XXX');
 });
 
 test('notBetween method works', function (): void {
@@ -21,6 +24,8 @@ test('beginsWith method works', function (): void {
     expect($regex->getPattern())->toBe('^hello');
     expect($regex->match('hello world'))->toBeTrue()
         ->and($regex->match('say hello'))->toBeFalse();
+
+    expect($regex->replace('hello world', 'Hi'))->toBe('Hi world');
 });
 
 test('endsWith method works', function (): void {

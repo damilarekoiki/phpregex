@@ -12,6 +12,10 @@ test('then method is order-dependent', function (): void {
 
     expect($regex->match('applebanana'))->toBeTrue();
     expect($regex->match('bananaapple'))->toBeFalse();
+
+    $consuming = Regex::build()->then('apple')->then('banana');
+    expect($consuming->count('applebananaapplebanana'))->toBe(2);
+    expect($consuming->replace('applebananaapplebanana', 'fruit'))->toBe('fruitfruit');
 });
 
 test('then method is sequential', function (): void {
@@ -28,6 +32,11 @@ test('then method is sequential', function (): void {
 
     expect($regex1->match('apple2banana'))->toBeFalse();
     expect($regex2->match('apple2banana'))->toBeTrue();
+
+    $consuming = Regex::build()->then('apple')
+        ->then(fn(Regex $regex): Regex => $regex->digit());
+    expect($consuming->count('apple2apple2'))->toBe(2);
+    expect($consuming->replace('apple2apple2', 'fruit'))->toBe('fruitfruit');
 });
 
 test('then method scans from the beginning when startFromBeginning is true', function (): void {
@@ -115,6 +124,10 @@ test('not works in sequence', function (): void {
 
     expect($regex->match('apple fruit'))->toBeTrue();
     expect($regex->match('applebanana'))->toBeFalse();
+
+    $consuming = Regex::build()->then('apple')->not('banana');
+    expect($consuming->count('apple fruit apple pie'))->toBe(2);
+    expect($consuming->replace('apple fruit apple pie', 'orange'))->toBe('orange fruit orange pie');
 });
 
 test('containsExactSequencesOf method works', function (): void {

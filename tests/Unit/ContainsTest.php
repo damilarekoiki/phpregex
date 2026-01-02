@@ -2,10 +2,14 @@
 
 use Ten\Phpregex\Regex;
 
-test('contains method works', function (): void {
+test('contains method vs then method', function (): void {
     $regex = Regex::build()->contains('apple');
     expect($regex->getPattern())->toBe('(?=.*apple)');
-    expect($regex->match('sweet apple'))->toBeTrue();
+    expect($regex->match('apple fruit'))->toBeTrue();
+    expect($regex->match('applebanana'))->toBeTrue();
+
+    $consuming = Regex::build()->then('apple')->then(fn(Regex $regex)=> $regex->between(['f'=> 'h']));
+    expect($consuming->count('applefruit apple pie appleg'))->toBe(2);
 });
 
 test('doesntContain method works', function (): void {
@@ -13,6 +17,8 @@ test('doesntContain method works', function (): void {
     expect($regex->getPattern())->toBe('^(?!.*apple).*$');
     expect($regex->match('sweet banana'))->toBeTrue()
         ->and($regex->match('sweet apple'))->toBeFalse();
+    expect($regex->count('sweet banana'))->toBe(1);
+    expect($regex->replace('sweet banana', 'X'))->toBe('X');
 });
 
 test('containsAnyOf method works with array', function (): void {

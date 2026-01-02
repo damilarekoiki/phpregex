@@ -6,6 +6,8 @@ test('global ignoreCase flag', function (): void {
     $regex = Regex::build()->addPattern('abc')->ignoreCase();
     expect($regex->get())->toBe('/abc/i');
     expect($regex->match('ABC'))->toBeTrue();
+    expect($regex->count('abc ABC def'))->toBe(2);
+    expect($regex->replace('abc ABC', 'X'))->toBe('X X');
 });
 
 test('global multiline flag', function (): void {
@@ -27,6 +29,9 @@ test('local ignoreCase flag with string', function (): void {
     expect($regex->match('abcDEF'))->toBeTrue()
         ->and($regex->match('ABCDEF'))->toBeTrue()
         ->and($regex->match('abcdef'))->toBeFalse();
+
+    expect($regex->count('abcDEF ABCDEF abcdef'))->toBe(2);
+    expect($regex->replace('ABCDEF', 'matched'))->toBe('matched');
 });
 
 test('local ignoreCase flag with closure', function (): void {

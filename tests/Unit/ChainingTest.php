@@ -15,6 +15,8 @@ test('chaining beginsWith and endsWith', function (): void {
     expect($regex->match('HTTP/1.1'))->toBeTrue()
         ->and($regex->match(' HTTP/1.1'))->toBeFalse()
         ->and($regex->match('HTTP/1.1 '))->toBeTrue();
+
+    expect($regex->replace('HTTP/1.1 ', 'X'))->toBe('X');
 });
 
 test('chaining contains and or', function (): void {
@@ -52,6 +54,7 @@ test('chaining with flags', function (): void {
     
     expect($regex->get())->toBe('/^abcxyz.*$/i');
     expect($regex->match('ABCXYZ'))->toBeTrue();
+    expect($regex->replace('ABCXYZ foo', 'matched'))->toBe('matched');
 });
 
 test('chaining when with complex logic', function (): void {

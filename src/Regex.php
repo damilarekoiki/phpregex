@@ -9,6 +9,7 @@ use Closure;
 use LogicException;
 use Ten\Phpregex\Expressions\Booleans;
 use Ten\Phpregex\Expressions\Contains;
+use Ten\Phpregex\Expressions\Exactly;
 use Ten\Phpregex\Expressions\Flags;
 use Ten\Phpregex\Expressions\Helpers;
 use Ten\Phpregex\Expressions\Positional;
@@ -24,6 +25,7 @@ final class Regex
     use Helpers;
     use Flags;
     use Booleans;
+    use Exactly;
 
     /**
      * @var array<int, string>
@@ -53,9 +55,28 @@ final class Regex
         return $regex;
     }
 
-    public function match(string $word): bool
+    public function match(string $subject): bool
     {
-        return (bool) preg_match($this->resolve(), $word);
+        return (bool) preg_match($this->resolve(), $subject);
+    }
+
+    public function count(string $subject): int
+    {
+        return (int) preg_match_all($this->resolve(), $subject);
+    }
+
+    public function replace(string $subject, string|Closure $replacement): string
+    {
+        if ($replacement instanceof Closure) {
+            return (string) preg_replace_callback($this->resolve(), $replacement, $subject);
+        }
+
+        return (string) preg_replace($this->resolve(), $replacement, $subject);
+    }
+
+    public function then(string|int|Closure $subject): self
+    {
+        return $this->addPattern($this->resolveSimplePattern($subject));
     }
 
     public function addPattern(string $pattern, bool $consuming = true): self

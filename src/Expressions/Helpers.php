@@ -41,11 +41,6 @@ trait Helpers
         return $this->addPattern("[a-zA-Z]+");
     }
 
-    public function alphanumeric(): self
-    {
-        return $this->addPattern("[a-zA-Z0-9]+");
-    }
-
     public function digits(): self
     {
         return $this->addPattern("[0-9]+");

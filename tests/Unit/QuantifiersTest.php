@@ -37,3 +37,10 @@ test('chains all quantifier methods', function (): void {
         ->and($regex->match('ab'))->toBeTrue()
         ->and($regex->match('bc'))->toBeFalse();
 });
+
+test('lookahead checks position, not value', function (): void {
+    $regex = Regex::build()->containsAtleastOne('a');
+    expect($regex->getPattern())->toBe('(?=.*a+)');
+    expect($regex->count('apple'))->toBe(1);
+    expect($regex->replace('apple', 'X'))->toBe('Xapple');
+});
