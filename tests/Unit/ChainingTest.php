@@ -82,7 +82,7 @@ test('chaining beginsWith, contains, and endsWith for validation', function (): 
 
 test('chaining between and containsAtleastOne', function (): void {
     $regex = Regex::build()
-        ->between('A', 'Z', caseSensitive: true)
+        ->between(['A' => 'Z'])
         ->containsAtleastOne('0');
     
     expect($regex->getPattern())->toBe('[A-Z](?=.*0+)');
@@ -201,8 +201,8 @@ test('arrow function works with not method', function (): void {
 test('massive chaining: positional and booleans coverage', function (): void {
     $regex = Regex::build()
         ->beginsWith('A')
-        ->between('B', 'D')
-        ->notBetween('X', 'Z')
+        ->between(['B' => 'D'])
+        ->notBetween(['X' => 'Z'])
         ->and('test')
         ->not('fail')
         ->when(true, fn (Regex $r): Regex => $r->contains('ok'))
@@ -220,7 +220,8 @@ test('massive chaining: contains methods coverage part 1', function (): void {
         ->doesntContain('bye')
         ->containsAnyOf(['a', 'e', 'i'])
         ->containsDigit()
-        ->containsNonDigit();
+        ->containsNonDigit()
+        ->containsBetween(['a' => 'z']);
 
     expect($regex->match('hello123world'))->toBeTrue()
         ->and($regex->match('hello123bye'))->toBeFalse()
@@ -363,4 +364,10 @@ test('massive chaining: doesnt methods coverage', function (): void {
 
     expect($regex2->match('hello world'))->toBeTrue()
         ->and($regex2->match('xyz'))->toBeFalse();
+
+    $regex3 = Regex::build()
+        ->doesntContainBetween(['0' => '9']);
+
+    expect($regex3->match('hello'))->toBeTrue()
+        ->and($regex3->match('hello123'))->toBeFalse();
 });

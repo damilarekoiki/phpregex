@@ -158,7 +158,7 @@ test('massive sequence: positional and contains coverage', function (): void {
     $regex = Regex::build()
         ->sequence(function (Sequence $s): void {
             $s->then(fn (Regex $r): Regex => $r->beginsWith('A')->containsDigit())
-              ->then(fn (Regex $r): Regex => $r->between('B', 'D')->notBetween('X', 'Z'))
+              ->then(fn (Regex $r): Regex => $r->between(['B' => 'D'])->notBetween(['X' => 'Z']))
               ->then(fn (Regex $r): Regex => $r->containsLetter())
               ->then(fn (Regex $r): Regex => $r->endsWith('Z'));
         }, startFromBeginning: true);
@@ -215,6 +215,7 @@ test('massive sequence: contains methods coverage', function (): void {
         ->sequence(function (Sequence $s): void {
             $s->then(fn (Regex $r): Regex => $r->contains('start'))
               ->then(fn (Regex $r): Regex => $r->containsAlphaNumeric())
+              ->then(fn (Regex $r): Regex => $r->containsBetween(['a' => 'z']))
               ->then(fn (Regex $r): Regex => $r->containsAnyOf(['x', 'y', 'z']))
               ->then(fn (Regex $r): Regex => $r->contains('end'));
         });

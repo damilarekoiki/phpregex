@@ -4,32 +4,24 @@ declare(strict_types=1);
 
 namespace Ten\Phpregex\Expressions;
 
+use Ten\Phpregex\Resolvers\RangePattern;
+
 trait Positional
 {
-    public function between(string|int $subject1, string|int $subject2, bool $caseSensitive = true): self
+    /**
+     * @param array<string|int, string|int> $ranges Array where key is range start, value is range end
+     */
+    public function between(array $ranges, bool $caseSensitive = true): self
     {
-        if (!$caseSensitive) {
-            $subject1Lower = mb_strtolower((string) $subject1);
-            $subject2Lower = mb_strtolower((string) $subject2);
-
-            $subject1Upper = mb_strtoupper((string) $subject1);
-            $subject2Upper = mb_strtoupper((string) $subject2);
-            return $this->addPattern("[" . preg_quote((string) $subject1Lower, '/') . "-" . preg_quote((string) $subject2Lower, '/') . preg_quote((string) $subject1Upper, '/') . "-" . preg_quote((string) $subject2Upper, '/') . "]");
-        }
-        return $this->addPattern("[" . preg_quote((string) $subject1, '/') . "-" . preg_quote((string) $subject2, '/') . "]");
+        return $this->addPattern((string) new RangePattern($ranges, negated: false, caseSensitive: $caseSensitive));
     }
 
-    public function notBetween(string|int $subject1, string|int $subject2, bool $caseSensitive = true): self
+    /**
+     * @param array<string|int, string|int> $ranges Array where key is range start, value is range end
+     */
+    public function notBetween(array $ranges, bool $caseSensitive = true): self
     {
-        if (!$caseSensitive) {
-            $subject1Lower = mb_strtolower((string) $subject1);
-            $subject2Lower = mb_strtolower((string) $subject2);
-
-            $subject1Upper = mb_strtoupper((string) $subject1);
-            $subject2Upper = mb_strtoupper((string) $subject2);
-            return $this->addPattern("[^" . preg_quote((string) $subject1Lower, '/') . "-" . preg_quote((string) $subject2Lower, '/') . preg_quote((string) $subject1Upper, '/') . "-" . preg_quote((string) $subject2Upper, '/') . "]");
-        }
-        return $this->addPattern("[^" . preg_quote((string) $subject1, '/') . "-" . preg_quote((string) $subject2, '/') . "]");
+        return $this->addPattern((string) new RangePattern($ranges, negated: true, caseSensitive: $caseSensitive));
     }
 
     public function beginsWith(string|int $subject): self

@@ -113,7 +113,12 @@ final class Regex
             if (!$this->isConsuming) {
                 $pattern .= '.*';
             }
-            return '^' . $pattern . '$';
+            if (!str_starts_with($pattern, '^')) {
+                $pattern = '^' . $pattern;
+            }
+            if (!str_ends_with($pattern, '$')) {
+                $pattern .= '$';
+            }
         }
 
         return $pattern;

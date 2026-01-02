@@ -31,8 +31,18 @@
         }
     },
     "scripts": {
-        "cs": "vendor/bin/php-cs-fixer check",
-        "cs:fix": "vendor/bin/php-cs-fixer fix",
-        "test": "vendor/bin/pest"
+        "check:refactor": "./vendor/bin/rector process --dry-run",
+        "check:lint": "./vendor/bin/php-cs-fixer check",
+        "check:stan": "./vendor/bin/phpstan analyse",
+        "test": "./vendor/bin/pest",
+        "fix:refactor": "./vendor/bin/rector process",
+        "fix:lint": "./vendor/bin/php-cs-fixer fix",
+        "fix:stan": "./vendor/bin/phpstan",
+        "ci": [
+            "@check:refactor",
+            "@check:lint",
+            "@check:stan",
+            "@test"
+        ]
     }
 }

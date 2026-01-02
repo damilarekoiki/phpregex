@@ -35,7 +35,7 @@ $regex = Regex::build(wholeString: true)
 ;
 
 $regex = Regex::build(wholeString: true)
-        ->slug();
+        ->containsOnlyDigits();
 
 echo $regex->get();
 

@@ -69,6 +69,20 @@ test('digit methods work', function (): void {
         ->and(Regex::build()->containsNonDigit()->match('12345'))->toBeFalse();
 });
 
+test('containsBetween and doesntContainBetween methods work', function (): void {
+    expect(Regex::build()->containsBetween(['a' => 'z'])->getPattern())->toBe('(?=.*[a-z])');
+    expect(Regex::build()->containsBetween(['a' => 'z'])->match('hello123'))->toBeTrue()
+        ->and(Regex::build()->containsBetween(['a' => 'z'])->match('12345'))->toBeFalse();
+
+    expect(Regex::build()->containsBetween(['a' => 'z', '0' => '9'])->getPattern())->toBe('(?=.*[a-z0-9])');
+    expect(Regex::build()->containsBetween(['a' => 'z', '0' => '9'])->match('hello123'))->toBeTrue()
+        ->and(Regex::build()->containsBetween(['a' => 'z', '0' => '9'])->match('!@#$%'))->toBeFalse();
+
+    expect(Regex::build()->doesntContainBetween(['0' => '9'])->getPattern())->toBe('^(?!.*[0-9]).+$');
+    expect(Regex::build()->doesntContainBetween(['0' => '5'])->match('hello6'))->toBeTrue()
+        ->and(Regex::build()->doesntContainBetween(['0' => '9'])->match('hello123'))->toBeFalse();
+});
+
 test('alphanumeric methods work', function (): void {
     expect(Regex::build()->containsAlphaNumeric()->getPattern())->toBe('(?=.*[A-Za-z0-9])');
     expect(Regex::build()->containsAlphaNumeric()->match('!@#a'))->toBeTrue()

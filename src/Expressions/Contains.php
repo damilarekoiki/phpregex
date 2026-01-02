@@ -7,6 +7,8 @@ namespace Ten\Phpregex\Expressions;
 use function is_array;
 use function is_string;
 
+use Ten\Phpregex\Resolvers\RangePattern;
+
 trait Contains
 {
     public function contains(string|int $chars): self
@@ -73,6 +75,22 @@ trait Contains
     public function containsOnlyDigits(): self
     {
         return $this->addPattern("^\d+$");
+    }
+
+    /**
+     * @param array<string|int, string|int> $ranges Array where key is range start, value is range end
+     */
+    public function containsBetween(array $ranges, bool $caseSensitive = true): self
+    {
+        return $this->addPattern('(?=.*' . new RangePattern($ranges, negated: false, caseSensitive: $caseSensitive) . ')', false);
+    }
+
+    /**
+     * @param array<string|int, string|int> $ranges Array where key is range start, value is range end
+     */
+    public function doesntContainBetween(array $ranges, bool $caseSensitive = true): self
+    {
+        return $this->addPattern('^(?!.*' . new RangePattern($ranges, negated: false, caseSensitive: $caseSensitive) . ').+$', false);
     }
 
     public function doesntContainOnlyDigits(): self
