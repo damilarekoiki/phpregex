@@ -52,6 +52,10 @@ test('atLeastOne method works', function (): void {
         ->and($regex->match('cherry'))->toBeFalse();
     
     expect(Regex::build()->atLeastOne('')->getPattern())->toBe('+');
+
+    $regex = Regex::build()->atLeastOne('a');
+    expect($regex->count('banana'))->toBe(3);
+    expect($regex->replace('banana', 'o'))->toBe('bonono');
 });
 
 test('zeroOrMore method works', function (): void {
@@ -60,6 +64,10 @@ test('zeroOrMore method works', function (): void {
     expect($regex->match('anything'))->toBeTrue();
     
     expect(Regex::build()->zeroOrMore('')->getPattern())->toBe('*');
+
+    $regex = Regex::build()->zeroOrMore('a');
+    expect($regex->count('banana'))->toBe(7); // Matches between every character including starts and ends
+    expect($regex->replace('banana', 'X'))->toBe('XbXXnXXnXX');
 });
 
 test('zeroOrOne method works', function (): void {
@@ -69,6 +77,10 @@ test('zeroOrOne method works', function (): void {
         ->and($regex->match('cherry'))->toBeTrue();
     
     expect(Regex::build()->zeroOrOne('')->getPattern())->toBe('?');
+
+    $regex = Regex::build()->zeroOrOne('a');
+    expect($regex->count('banana'))->toBe(7); 
+    expect($regex->replace('banana', 'X'))->toBe('XbXXnXXnXX');
 });
 
 test('chains non-lookahead quantifier methods', function (): void {

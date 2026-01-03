@@ -65,10 +65,14 @@ test('digit methods work', function (): void {
     expect(Regex::build()->containsOnlyDigits()->getPattern())->toBe('^\d+$');
     expect(Regex::build()->containsOnlyDigits()->match('12345'))->toBeTrue()
         ->and(Regex::build()->containsOnlyDigits()->match('123a45'))->toBeFalse();
+    expect(Regex::build()->containsOnlyDigits()->count('12345'))->toBe(1);
+    expect(Regex::build()->containsOnlyDigits()->replace('12345', 'X'))->toBe('X');
 
     expect(Regex::build()->doesntContainOnlyDigits()->getPattern())->toBe('^(?!\d+$).+');
     expect(Regex::build()->doesntContainOnlyDigits()->match('123a45'))->toBeTrue()
         ->and(Regex::build()->doesntContainOnlyDigits()->match('12345'))->toBeFalse();
+    expect(Regex::build()->doesntContainOnlyDigits()->count('123a45'))->toBe(1);
+    expect(Regex::build()->doesntContainOnlyDigits()->replace('123a45', 'X'))->toBe('X');
 
     expect(Regex::build()->containsNonDigit()->getPattern())->toBe('(?=.*\D)');
     expect(Regex::build()->containsNonDigit()->match('123a45'))->toBeTrue()
@@ -101,10 +105,14 @@ test('alphanumeric methods work', function (): void {
     expect(Regex::build()->containsOnlyAlphaNumeric()->getPattern())->toBe('^[A-Za-z0-9]+$');
     expect(Regex::build()->containsOnlyAlphaNumeric()->match('abc123'))->toBeTrue()
         ->and(Regex::build()->containsOnlyAlphaNumeric()->match('abc-123'))->toBeFalse();
+    expect(Regex::build()->containsOnlyAlphaNumeric()->count('abc123'))->toBe(1);
+    expect(Regex::build()->containsOnlyAlphaNumeric()->replace('abc123', 'X'))->toBe('X');
 
     expect(Regex::build()->doesntContainOnlyAlphaNumeric()->getPattern())->toBe('[^A-Za-z0-9]');
     expect(Regex::build()->doesntContainOnlyAlphaNumeric()->match('abc-123'))->toBeTrue()
         ->and(Regex::build()->doesntContainOnlyAlphaNumeric()->match('abc123'))->toBeFalse();
+    expect(Regex::build()->doesntContainOnlyAlphaNumeric()->count('abc-123'))->toBe(1);
+    expect(Regex::build()->doesntContainOnlyAlphaNumeric()->replace('abc-123', 'X'))->toBe('abcX123');
 });
 
 test('word boundary methods work', function (): void {

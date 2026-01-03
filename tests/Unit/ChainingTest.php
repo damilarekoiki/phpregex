@@ -374,3 +374,42 @@ test('massive chaining: doesnt methods coverage', function (): void {
     expect($regex3->match('hello'))->toBeTrue()
         ->and($regex3->match('hello123'))->toBeFalse();
 });
+test('complex chain: contains, exactly, quantifiers and booleans', function (): void {
+    $regex = Regex::build()
+        ->containsDigit()
+        ->digit()
+        ->atLeastOne('a')
+        ->or()
+        ->alpha();
+    
+    expect($regex->getPattern())->toBe('(?=.*\d)\da+|[a-zA-Z]+');
+    expect($regex->match('12aaa'))->toBeTrue()
+        ->and($regex->match('abc'))->toBeTrue()
+        ->and($regex->match('1'))->toBeFalse();
+    
+    expect($regex->count('12aaa big apple 34bb'))->toBe(4);
+});
+
+test('complex chain: sequential, helpers and flags', function (): void {
+    $regex = Regex::build()
+        ->exactSequencesOf(fn (Regex $r): Regex => $r->digit(), 2)
+        ->slug()
+        ->ignoreCase();
+    
+    expect($regex->getPattern())->toBe('(?:\d){2}[a-z0-9]+(?:-[a-z0-9]+)*');
+    expect($regex->match('12MY-SLUG'))->toBeTrue()
+        ->and($regex->match('1MY-SLUG'))->toBeFalse();
+});
+
+test('complex chain: multiple contains and replace', function (): void {
+    $regex = Regex::build()
+        ->contains('apple')
+        ->containsDigit()
+        ->containsOnlyAlphaNumeric();
+    
+    expect($regex->match('apple123'))->toBeTrue()
+        ->and($regex->match('apple 123'))->toBeFalse();
+    
+    expect($regex->count('apple123'))->toBe(1);
+    expect($regex->replace('apple123', 'X'))->toBe('X');
+});

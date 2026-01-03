@@ -136,6 +136,9 @@ test('exactSequencesOf method works', function (): void {
     expect($regex->match('aaa'))->toBeTrue()
         ->and($regex->match('aa'))->toBeFalse()
         ->and($regex->match('aaaa'))->toBeTrue();
+
+    expect($regex->count('aaaaaa'))->toBe(2);
+    expect($regex->replace('aaaaaa', 'X'))->toBe('XX');
 });
 
 test('containsExactSequencesOf method works', function (): void {
@@ -153,6 +156,9 @@ test('sequencesOf method works', function (): void {
         ->and($regex->match('aaa'))->toBeTrue()
         ->and($regex->match('aaaa'))->toBeTrue()
         ->and($regex->match('a'))->toBeFalse();
+
+    expect($regex->count('aaaaaaaa'))->toBe(2); // 4 + 4
+    expect($regex->replace('aaaaaaaa', 'X'))->toBe('XX');
 });
 
 test('containsSequencesOf method works', function (): void {
@@ -169,6 +175,9 @@ test('atLeastSequencesOf method works', function (): void {
         ->and($regex->match('aaaaa'))->toBeTrue()
         ->and($regex->match('aba'))->toBeFalse()
         ->and($regex->match('a'))->toBeFalse();
+
+    expect($regex->count('aaabaaa'))->toBe(2);
+    expect($regex->replace('aaabaaa', 'X'))->toBe('XbX');
 });
 
 test('containsAtleastSequencesOf method works', function (): void {

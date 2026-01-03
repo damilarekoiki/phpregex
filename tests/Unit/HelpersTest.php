@@ -17,6 +17,10 @@ test('ipv4 helper', function (): void {
     expect($regex->match('127.0.0.1'))->toBeTrue()
         ->and($regex->match('192.168.1.1'))->toBeTrue()
         ->and($regex->match('256.256.256.256'))->toBeFalse();
+
+    $nonFullString = Regex::build()->ipv4();
+    expect($nonFullString->count('IPs: 1.1.1.1, 2.2.2.2'))->toBe(2);
+    expect($nonFullString->replace('IPs: 1.1.1.1, 2.2.2.2', 'X'))->toBe('IPs: X, X');
 });
 
 test('ipv6 helper', function (): void {
@@ -36,6 +40,10 @@ test('url helper', function (): void {
     expect($regex->match('https://google.com'))->toBeTrue()
         ->and($regex->match('http://www.test.io/path?query=1'))->toBeTrue()
         ->and($regex->match('google.com'))->toBeFalse();
+
+    $nonFullString = Regex::build()->url();
+    expect($nonFullString->count('Visit https://a.com or http://b.org'))->toBe(2);
+    expect($nonFullString->replace('Visit https://a.com or http://b.org', 'LINK'))->toBe('Visit LINK or LINK');
 });
 
 test('alpha helper', function (): void {
@@ -62,6 +70,10 @@ test('hex color helper', function (): void {
     expect($regex->match('#fff'))->toBeTrue()
         ->and($regex->match('#ffffff'))->toBeTrue()
         ->and($regex->match('fff'))->toBeFalse();
+
+    $nonFullString = Regex::build()->hexColor();
+    expect($nonFullString->count('Colors: #abc, #defg, #123456'))->toBe(3);
+    expect($nonFullString->replace('Colors: #abc, #defg, #123456', 'COLOR'))->toBe('Colors: COLOR, COLORg, COLOR');
 });
 
 test('slug helper', function (): void {
@@ -70,6 +82,10 @@ test('slug helper', function (): void {
         ->and($regex->match('slug123'))->toBeTrue()
         ->and($regex->match('Not-A-Slug'))->toBeFalse()
         ->and($regex->match('not a slug'))->toBeFalse();
+
+    $nonFullString = Regex::build()->slug();
+    expect($nonFullString->count('slugs: first-post, second-post'))->toBe(3);
+    expect($nonFullString->replace('slugs: first-post, second-post', 'X'))->toBe('X: X, X');
 });
 
 test('credit card helper', function (): void {
