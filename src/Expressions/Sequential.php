@@ -9,6 +9,12 @@ use Ten\Phpregex\Sequence;
 
 trait Sequential
 {
+    /**
+     * Check if the subject contains an exact number of sequences of the given subject (lookahead).
+     *
+     * @param string|int|Closure $subject The subject to match.
+     * @param int $occurences The exact number of occurrences.
+     */
     public function containsExactSequencesOf(string|int|Closure $subject, int $occurences): self
     {
         $subject = $this->resolveSimplePattern($subject);
@@ -20,6 +26,12 @@ trait Sequential
         return $this->addPattern('(?=.*' . $subject . "{" . $occurences . "})", false);
     }
 
+    /**
+     * Match an exact number of sequences of the given subject (consuming).
+     *
+     * @param string|int|Closure $subject The subject to match.
+     * @param int $occurences The exact number of occurrences.
+     */
     public function exactSequencesOf(string|int|Closure $subject, int $occurences): self
     {
         $subject = $this->resolveSimplePattern($subject);
@@ -31,6 +43,13 @@ trait Sequential
         return $this->addPattern($subject . "{" . $occurences . "}");
     }
 
+    /**
+     * Check if the subject contains a range of sequences of the given subject (lookahead).
+     *
+     * @param string|int|Closure $subject The subject to match.
+     * @param int $minOcurrences The minimum number of occurrences.
+     * @param int $maxOccurrences The maximum number of occurrences.
+     */
     public function containsSequencesOf(string|int|Closure $subject, int $minOcurrences, int $maxOccurrences): self
     {
         $subject = $this->resolveSimplePattern($subject);
@@ -42,6 +61,13 @@ trait Sequential
         return $this->addPattern('(?=.*' . $subject . "{" . $minOcurrences . "," . $maxOccurrences . "})", false);
     }
 
+    /**
+     * Match a range of sequences of the given subject (consuming).
+     *
+     * @param string|int|Closure $subject The subject to match.
+     * @param int $minOcurrences The minimum number of occurrences.
+     * @param int $maxOccurrences The maximum number of occurrences.
+     */
     public function sequencesOf(string|int|Closure $subject, int $minOcurrences, int $maxOccurrences): self
     {
         $subject = $this->resolveSimplePattern($subject);
@@ -53,6 +79,12 @@ trait Sequential
         return $this->addPattern($subject . "{" . $minOcurrences . "," . $maxOccurrences . "}");
     }
 
+    /**
+     * Check if the subject contains at least a certain number of sequences of the given subject (lookahead).
+     *
+     * @param string|int|Closure $subject The subject to match.
+     * @param int $minOcurrences The minimum number of occurrences.
+     */
     public function containsAtleastSequencesOf(string|int|Closure $subject, int $minOcurrences): self
     {
         $subject = $this->resolveSimplePattern($subject);
@@ -64,6 +96,12 @@ trait Sequential
         return $this->addPattern('(?=.*' . $subject . "{" . $minOcurrences . ",})", false);
     }
 
+    /**
+     * Match at least a certain number of sequences of the given subject (consuming).
+     *
+     * @param string|int|Closure $subject The subject to match.
+     * @param int $minOcurrences The minimum number of occurrences.
+     */
     public function atLeastSequencesOf(string|int|Closure $subject, int $minOcurrences): self
     {
         $subject = $this->resolveSimplePattern($subject);
@@ -75,6 +113,12 @@ trait Sequential
         return $this->addPattern($subject . "{" . $minOcurrences . ",}");
     }
 
+    /**
+     * Start a sequential pattern building block.
+     *
+     * @param Closure $callback A closure that defines the sequence parts.
+     * @param bool $startFromBeginning Whether the sequence must start from the beginning of the search.
+     */
     public function sequence(Closure $callback, bool $startFromBeginning = false): self
     {
         $sequence = new Sequence($this, $startFromBeginning);

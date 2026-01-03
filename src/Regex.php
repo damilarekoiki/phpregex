@@ -31,6 +31,7 @@ final class Regex
      * @var array<int, string>
      */
     private array $patterns = [];
+    private ?string $masterPattern = null;
 
     /**
      * @var array<int, string>
@@ -48,6 +49,11 @@ final class Regex
         ];
     }
 
+    /**
+     * Start building a new regex.
+     *
+     * @param bool $fullStringMatch Whether to enforce a full string match.
+     */
     public static function build(bool $fullStringMatch = false): self
     {
         $regex = new self();
@@ -55,16 +61,34 @@ final class Regex
         return $regex;
     }
 
-    public function match(string $subject): bool
+    /**
+     * Checks if the regex matches the given subject.
+     *
+     * @param string $subject The string to search the pattern in.
+     */
+    public function matches(string $subject): bool
     {
         return (bool) preg_match($this->resolve(), $subject);
     }
 
+    /**
+     * Count the number of matches in the given subject.
+     *
+     * @param string $subject The string to search the pattern in.
+     * @return int The number of matches found.
+     */
     public function count(string $subject): int
     {
         return (int) preg_match_all($this->resolve(), $subject);
     }
 
+    /**
+     * Replaces matches in the subject with the given replacement.
+     *
+     * @param string $subject The string to search the pattern in.
+     * @param string|Closure $replacement The replacement string or a closure for callback.
+     * @return string The resulting string after replacement.
+     */
     public function replace(string $subject, string|Closure $replacement): string
     {
         if ($replacement instanceof Closure) {
@@ -74,11 +98,22 @@ final class Regex
         return (string) preg_replace($this->resolve(), $replacement, $subject);
     }
 
+    /**
+     * Add a pattern that follows the current patterns.
+     *
+     * @param string|int|Closure $subject The pattern to add.
+     */
     public function then(string|int|Closure $subject): self
     {
         return $this->addPattern($this->resolveSimplePattern($subject));
     }
 
+    /**
+     * Add a raw pattern string to the regex.
+     *
+     * @param string $pattern The regex pattern string.
+     * @param bool $consuming Whether this pattern consumes characters.
+     */
     public function addPattern(string $pattern, bool $consuming = true): self
     {
         $this->patterns[] = $pattern;
@@ -88,9 +123,15 @@ final class Regex
         return $this;
     }
 
-    public function setPattern(string $pattern): void
+    /**
+     * Overwrite all current patterns with a new one.
+     *
+     * @param string $pattern The new regex pattern string.
+     * @return void
+     */
+    public function overridePattern(string $pattern): void
     {
-        $this->patterns = [$pattern];
+        $this->masterPattern = $pattern;
     }
 
     public function __get(string $name): mixed
@@ -105,6 +146,12 @@ final class Regex
         return $this->{$name}();
     }
 
+    /**
+     * Resolve a simple pattern from various subject types.
+     *
+     * @param string|int|Closure $subject The subject to resolve.
+     * @return string The resolved regex pattern string.
+     */
     private function resolveSimplePattern(string|int|Closure $subject): string
     {
         if ($subject instanceof Closure) {
@@ -116,18 +163,36 @@ final class Regex
         return preg_quote((string) $subject, '/');
     }
 
+    /**
+     * Resolve the complete regex string with delimiters and flags.
+     *
+     * @return string The full regex string.
+     */
     private function resolve(): string
     {
         return '/' . $this->getPattern() . '/' . implode('', array_unique($this->flags ?? []));
     }
 
+    /**
+     * Get the full regex string.
+     *
+     * @return string The full regex string.
+     */
     public function get(): string
     {
         return $this->resolve();
     }
 
+    /**
+     * Get the inner regex pattern (without delimiters and flags).
+     *
+     * @return string The regex pattern.
+     */
     public function getPattern(): string
     {
+        if ($this->masterPattern) {
+            return $this->masterPattern;
+        }
         $pattern = implode('', $this->patterns);
 
         if ($this->fullStringMatch) {
@@ -145,6 +210,11 @@ final class Regex
         return $pattern;
     }
 
+    /**
+     * Wrap a set of patterns in a capturing group.
+     *
+     * @param Closure $closure A closure that defines the patterns inside the group.
+     */
     public function group(Closure $closure): self
     {
         $regex = Regex::build();
@@ -155,7 +225,12 @@ final class Regex
         return $this;
     }
 
-    public function isFirst(): bool
+    /**
+     * Check if no patterns have been added yet.
+     *
+     * @return bool True if no patterns are present.
+     */
+    public function isEmpty(): bool
     {
         return $this->patterns === [];
     }

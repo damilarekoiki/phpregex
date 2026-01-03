@@ -5,8 +5,8 @@ use Ten\Phpregex\Regex;
 test('between method works', function (): void {
     $regex = Regex::build()->between(['a' => 'z']);
     expect($regex->getPattern())->toBe('[a-z]');
-    expect($regex->match('m'))->toBeTrue()
-        ->and($regex->match('1'))->toBeFalse();
+    expect($regex->matches('m'))->toBeTrue()
+        ->and($regex->matches('1'))->toBeFalse();
 
     expect($regex->count('abc 123 def'))->toBe(6);
     expect($regex->replace('abc', 'X'))->toBe('XXX');
@@ -15,15 +15,15 @@ test('between method works', function (): void {
 test('notBetween method works', function (): void {
     $regex = Regex::build()->notBetween(['0' => '9']);
     expect($regex->getPattern())->toBe('[^0-9]');
-    expect($regex->match('a'))->toBeTrue()
-        ->and($regex->match('5'))->toBeFalse();
+    expect($regex->matches('a'))->toBeTrue()
+        ->and($regex->matches('5'))->toBeFalse();
 });
 
 test('beginsWith method works', function (): void {
     $regex = Regex::build()->beginsWith('hello');
     expect($regex->getPattern())->toBe('^hello');
-    expect($regex->match('hello world'))->toBeTrue()
-        ->and($regex->match('say hello'))->toBeFalse();
+    expect($regex->matches('hello world'))->toBeTrue()
+        ->and($regex->matches('say hello'))->toBeFalse();
 
     expect($regex->replace('hello world', 'Hi'))->toBe('Hi world');
 });
@@ -31,8 +31,8 @@ test('beginsWith method works', function (): void {
 test('endsWith method works', function (): void {
     $regex = Regex::build()->endsWith('world');
     expect($regex->getPattern())->toBe('.*world$');
-    expect($regex->match('hello world'))->toBeTrue()
-        ->and($regex->match('world is round'))->toBeFalse();
+    expect($regex->matches('hello world'))->toBeTrue()
+        ->and($regex->matches('world is round'))->toBeFalse();
 });
 test('chains all positional methods', function (): void {
     $regex = Regex::build()
@@ -44,11 +44,11 @@ test('chains all positional methods', function (): void {
         ->endsWith('Z');
 
     expect($regex->getPattern())->toBe('^A[B-D][m-qM-Q][^e-gE-G][^r-t].*Z$');
-    expect($regex->match('ABmPHZ'))->toBeTrue()
-        ->and($regex->match('ACNyfZ'))->toBeTrue()
-        ->and($regex->match('ACpysZ'))->toBeFalse()
-        ->and($regex->match('ACpySZ'))->toBeTrue()
-        ->and($regex->match('AEHZ'))->toBeFalse()
-        ->and($regex->match('ACnfDZ'))->toBeFalse()
-        ->and($regex->match('XBZ'))->toBeFalse();
+    expect($regex->matches('ABmPHZ'))->toBeTrue()
+        ->and($regex->matches('ACNyfZ'))->toBeTrue()
+        ->and($regex->matches('ACpysZ'))->toBeFalse()
+        ->and($regex->matches('ACpySZ'))->toBeTrue()
+        ->and($regex->matches('AEHZ'))->toBeFalse()
+        ->and($regex->matches('ACnfDZ'))->toBeFalse()
+        ->and($regex->matches('XBZ'))->toBeFalse();
 });

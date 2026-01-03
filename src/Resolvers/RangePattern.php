@@ -9,7 +9,11 @@ use Stringable;
 final readonly class RangePattern implements Stringable
 {
     /**
-     * @param array<string|int, string|int> $ranges Array where key is range start, value is range end
+     * RangePattern constructor.
+     *
+     * @param array<string|int, string|int> $ranges Array where key is range start, value is range end.
+     * @param bool $negated Whether the range should be negated (e.g., [^a-z]).
+     * @param bool $caseSensitive Whether the range check should be case sensitive.
      */
     public function __construct(
         private array $ranges,
@@ -18,6 +22,11 @@ final readonly class RangePattern implements Stringable
     ) {
     }
 
+    /**
+     * Convert the range into a regex pattern fragment.
+     *
+     * @return string The regex range pattern.
+     */
     public function __toString(): string
     {
         $pattern = $this->negated ? '[^' : '[';

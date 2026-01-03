@@ -12,9 +12,9 @@ test('chaining beginsWith and endsWith', function (): void {
         ;
     
     expect($regex->getPattern())->toBe('^HTTP\/\d.\d.*$');
-    expect($regex->match('HTTP/1.1'))->toBeTrue()
-        ->and($regex->match(' HTTP/1.1'))->toBeFalse()
-        ->and($regex->match('HTTP/1.1 '))->toBeTrue();
+    expect($regex->matches('HTTP/1.1'))->toBeTrue()
+        ->and($regex->matches(' HTTP/1.1'))->toBeFalse()
+        ->and($regex->matches('HTTP/1.1 '))->toBeTrue();
 
     expect($regex->replace('HTTP/1.1 ', 'X'))->toBe('X');
 });
@@ -26,9 +26,9 @@ test('chaining contains and or', function (): void {
         ->contains('banana');
     
     expect($regex->getPattern())->toBe('(?=.*apple)|(?=.*banana)');
-    expect($regex->match('I have an apple'))->toBeTrue()
-        ->and($regex->match('I have a banana'))->toBeTrue()
-        ->and($regex->match('I have a cherry'))->toBeFalse();
+    expect($regex->matches('I have an apple'))->toBeTrue()
+        ->and($regex->matches('I have a banana'))->toBeTrue()
+        ->and($regex->matches('I have a cherry'))->toBeFalse();
 });
 
 test('complex sequence chaining', function (): void {
@@ -40,9 +40,9 @@ test('complex sequence chaining', function (): void {
         });
     
     expect($regex->getPattern())->toBe('(?=.*(foo(.*(bar|baz))qux))');
-    expect($regex->match('foobarqux'))->toBeTrue()
-        ->and($regex->match('foobazqux'))->toBeTrue()
-        ->and($regex->match('fooqux'))->toBeFalse();
+    expect($regex->matches('foobarqux'))->toBeTrue()
+        ->and($regex->matches('foobazqux'))->toBeTrue()
+        ->and($regex->matches('fooqux'))->toBeFalse();
 });
 
 test('chaining with flags', function (): void {
@@ -53,7 +53,7 @@ test('chaining with flags', function (): void {
         ->endsWith('');
     
     expect($regex->get())->toBe('/^abcxyz.*$/i');
-    expect($regex->match('ABCXYZ'))->toBeTrue();
+    expect($regex->matches('ABCXYZ'))->toBeTrue();
     expect($regex->replace('ABCXYZ foo', 'matched'))->toBe('matched');
 });
 
@@ -77,10 +77,10 @@ test('chaining beginsWith, contains, and endsWith for validation', function (): 
         ->endsWith('.pdf');
     
     expect($regex->getPattern())->toBe('^INV\-(?=.*\d)(?=.*+).*\.pdf$');
-    expect($regex->match('INV-123.pdf'))->toBeTrue()
-        ->and($regex->match('INV-abc.pdf'))->toBeFalse()
-        ->and($regex->match('INV-123.jpg'))->toBeFalse()
-        ->and($regex->match('A-INV-123.pdf'))->toBeFalse();
+    expect($regex->matches('INV-123.pdf'))->toBeTrue()
+        ->and($regex->matches('INV-abc.pdf'))->toBeFalse()
+        ->and($regex->matches('INV-123.jpg'))->toBeFalse()
+        ->and($regex->matches('A-INV-123.pdf'))->toBeFalse();
 });
 
 test('chaining between and containsAtleastOne', function (): void {
@@ -89,12 +89,12 @@ test('chaining between and containsAtleastOne', function (): void {
         ->containsAtleastOne('0');
     
     expect($regex->getPattern())->toBe('[A-Z](?=.*0+)');
-    expect($regex->match('A0'))->toBeTrue()
-        ->and($regex->match('Z000'))->toBeTrue()
-        ->and($regex->match('Z0'))->toBeTrue()
-        ->and($regex->match('z000'))->toBeFalse()
-        ->and($regex->match('A'))->toBeFalse()
-        ->and($regex->match('0'))->toBeFalse();
+    expect($regex->matches('A0'))->toBeTrue()
+        ->and($regex->matches('Z000'))->toBeTrue()
+        ->and($regex->matches('Z0'))->toBeTrue()
+        ->and($regex->matches('z000'))->toBeFalse()
+        ->and($regex->matches('A'))->toBeFalse()
+        ->and($regex->matches('0'))->toBeFalse();
 });
 
 test('grouping with quantifiers and or', function (): void {
@@ -106,12 +106,12 @@ test('grouping with quantifiers and or', function (): void {
         ->containsZeroOrMore('m');
     
     expect($regex->getPattern())->toBe('(abc)(?=.*n+)|(xyz)(?=.*m*)');
-    expect($regex->match('abcabcn'))->toBeTrue()
-        ->and($regex->match('xyzxyzm'))->toBeTrue()
-        ->and($regex->match('abc'))->toBeFalse()
-        ->and($regex->match('xyz'))->toBeTrue()
-        ->and($regex->match('abcn'))->toBeTrue()
-        ->and($regex->match('xyzm'))->toBeTrue();
+    expect($regex->matches('abcabcn'))->toBeTrue()
+        ->and($regex->matches('xyzxyzm'))->toBeTrue()
+        ->and($regex->matches('abc'))->toBeFalse()
+        ->and($regex->matches('xyz'))->toBeTrue()
+        ->and($regex->matches('abcn'))->toBeTrue()
+        ->and($regex->matches('xyzm'))->toBeTrue();
 });
 
 test('complex sequence with not lookahead trailing', function (): void {
@@ -122,8 +122,8 @@ test('complex sequence with not lookahead trailing', function (): void {
               ->then(fn (Regex $r): Regex => $r->not('_admin'));
         });
     
-    expect($regex->match('user_123'))->toBeTrue()
-        ->and($regex->match('user_123_admin'))->toBeFalse();
+    expect($regex->matches('user_123'))->toBeTrue()
+        ->and($regex->matches('user_123_admin'))->toBeFalse();
 });
 
 test('chaining with multiple lookaheads and consuming patterns', function (): void {
@@ -134,8 +134,8 @@ test('chaining with multiple lookaheads and consuming patterns', function (): vo
         ->addPattern('cherrydog');
     
     expect($regex->getPattern())->toBe('(?=.*apple)(?=.*banana).*cherrydog');
-    expect($regex->match('I have an apple and a banana cherrydog'))->toBeTrue()
-        ->and($regex->match('apple banana cherry'))->toBeFalse();
+    expect($regex->matches('I have an apple and a banana cherrydog'))->toBeTrue()
+        ->and($regex->matches('apple banana cherry'))->toBeFalse();
 });
 
 test('nested grouping and complex quantifiers', function (): void {
@@ -148,9 +148,9 @@ test('nested grouping and complex quantifiers', function (): void {
         ->containsAtleastSequencesOf('a', 2);
     
     expect($regex->getPattern())->toBe('(a(b|c)d)(?=.*a{2,})');
-    expect($regex->match('abdaacd'))->toBeTrue()
-        ->and($regex->match('abdaacdabdbcd'))->toBeTrue()
-        ->and($regex->match('abd'))->toBeFalse();
+    expect($regex->matches('abdaacd'))->toBeTrue()
+        ->and($regex->matches('abdaacdabdbcd'))->toBeTrue()
+        ->and($regex->matches('abd'))->toBeFalse();
 });
 
 test('fullStringMatch with sequence and booleans', function (): void {
@@ -162,12 +162,12 @@ test('fullStringMatch with sequence and booleans', function (): void {
         ->addPattern('baz');
     
     expect($regex->getPattern())->toBe('^(^(foo.*bar))|baz$');
-    expect($regex->match('foobar'))->toBeTrue()
-        ->and($regex->match('baz'))->toBeTrue()
-        ->and($regex->match('foobarbaz'))->toBeTrue()
-        ->and($regex->match('bar'))->toBeFalse()
-        ->and($regex->match('foo'))->toBeFalse()
-        ->and($regex->match('barfoo'))->toBeFalse();
+    expect($regex->matches('foobar'))->toBeTrue()
+        ->and($regex->matches('baz'))->toBeTrue()
+        ->and($regex->matches('foobarbaz'))->toBeTrue()
+        ->and($regex->matches('bar'))->toBeFalse()
+        ->and($regex->matches('foo'))->toBeFalse()
+        ->and($regex->matches('barfoo'))->toBeFalse();
 });
 
 test('arrow function works with when method', function (): void {
@@ -212,9 +212,9 @@ test('massive chaining: positional and booleans coverage', function (): void {
         ->or->contains('alt')
         ->endsWith('Z');
 
-    expect($regex->match('ACMtestokZ'))->toBeTrue()
-        ->and($regex->match('AYMtestokZ'))->toBeFalse()
-        ->and($regex->match('ACMfailokZ'))->toBeFalse();
+    expect($regex->matches('ACMtestokZ'))->toBeTrue()
+        ->and($regex->matches('AYMtestokZ'))->toBeFalse()
+        ->and($regex->matches('ACMfailokZ'))->toBeFalse();
 });
 
 test('massive chaining: contains methods coverage part 1', function (): void {
@@ -226,9 +226,9 @@ test('massive chaining: contains methods coverage part 1', function (): void {
         ->containsNonDigit()
         ->containsBetween(['a' => 'z']);
 
-    expect($regex->match('hello123world'))->toBeTrue()
-        ->and($regex->match('hello123bye'))->toBeFalse()
-        ->and($regex->match('hxllo123world'))->toBeFalse();
+    expect($regex->matches('hello123world'))->toBeTrue()
+        ->and($regex->matches('hello123bye'))->toBeFalse()
+        ->and($regex->matches('hxllo123world'))->toBeFalse();
 });
 
 test('massive chaining: contains methods coverage part 2', function (): void {
@@ -237,9 +237,9 @@ test('massive chaining: contains methods coverage part 2', function (): void {
         ->containsWordsThatBeginWith('pre')
         ->containsWordsThatEndWith('fix');
 
-    expect($regex->match('prefix is good'))->toBeTrue()
-        ->and($regex->match('the prefix works'))->toBeTrue()
-        ->and($regex->match('nothing here'))->toBeFalse();
+    expect($regex->matches('prefix is good'))->toBeTrue()
+        ->and($regex->matches('the prefix works'))->toBeTrue()
+        ->and($regex->matches('nothing here'))->toBeFalse();
 });
 
 test('massive chaining: contains methods coverage part 3', function (): void {
@@ -252,9 +252,9 @@ test('massive chaining: contains methods coverage part 3', function (): void {
         ->containsWordCharacter()
         ->containsAnything();
 
-    expect($regex->match('Hello World'))->toBeTrue()
-        ->and($regex->match('hello world'))->toBeFalse()
-        ->and($regex->match('HELLO WORLD'))->toBeFalse();
+    expect($regex->matches('Hello World'))->toBeTrue()
+        ->and($regex->matches('hello world'))->toBeFalse()
+        ->and($regex->matches('HELLO WORLD'))->toBeFalse();
 });
 
 test('massive chaining: quantifiers coverage', function (): void {
@@ -263,9 +263,9 @@ test('massive chaining: quantifiers coverage', function (): void {
         ->containsZeroOrMore('B')
         ->containsZeroOrOne('C');
 
-    expect($regex->match('AAABBBCCC'))->toBeTrue()
-        ->and($regex->match('AAA'))->toBeTrue()
-        ->and($regex->match('BBB'))->toBeFalse();
+    expect($regex->matches('AAABBBCCC'))->toBeTrue()
+        ->and($regex->matches('AAA'))->toBeTrue()
+        ->and($regex->matches('BBB'))->toBeFalse();
 });
 
 test('massive chaining: sequential coverage', function (): void {
@@ -274,70 +274,70 @@ test('massive chaining: sequential coverage', function (): void {
         ->containsSequencesOf('B', 2, 4)
         ->containsAtleastSequencesOf('C', 2);
 
-    expect($regex->match('AAABBBBCC'))->toBeTrue()
-        ->and($regex->match('AABBCC'))->toBeFalse()
-        ->and($regex->match('AAABCC'))->toBeFalse();
+    expect($regex->matches('AAABBBBCC'))->toBeTrue()
+        ->and($regex->matches('AABBCC'))->toBeFalse()
+        ->and($regex->matches('AAABCC'))->toBeFalse();
 });
 
 test('massive chaining: helpers coverage part 1', function (): void {
     $regex = Regex::build()
         ->email();
 
-    expect($regex->match('test@example.com'))->toBeTrue()
-        ->and($regex->match('invalid-email'))->toBeFalse();
+    expect($regex->matches('test@example.com'))->toBeTrue()
+        ->and($regex->matches('invalid-email'))->toBeFalse();
 
     $regex2 = Regex::build()->url();
-    expect($regex2->match('https://example.com/path?query=1'))->toBeTrue();
+    expect($regex2->matches('https://example.com/path?query=1'))->toBeTrue();
 
     $regex3 = Regex::build()->uuid();
-    expect($regex3->match('550e8400-e29b-41d4-a716-446655440000'))->toBeTrue();
+    expect($regex3->matches('550e8400-e29b-41d4-a716-446655440000'))->toBeTrue();
 
     $regex4 = Regex::build()->ipv4();
-    expect($regex4->match('192.168.1.1'))->toBeTrue();
+    expect($regex4->matches('192.168.1.1'))->toBeTrue();
 });
 
 test('massive chaining: helpers coverage part 2', function (): void {
     $regex = Regex::build()
         ->alpha();
-    expect($regex->match('HelloWorld'))->toBeTrue();
+    expect($regex->matches('HelloWorld'))->toBeTrue();
 
     $regex2 = Regex::build()->alphanumeric();
-    expect($regex2->match('Test123'))->toBeTrue();
+    expect($regex2->matches('Test123'))->toBeTrue();
 
     $regex3 = Regex::build()->digits();
-    expect($regex3->match('12345'))->toBeTrue();
+    expect($regex3->matches('12345'))->toBeTrue();
 
     $regex4 = Regex::build()->hexColor();
-    expect($regex4->match('#FF5733'))->toBeTrue();
+    expect($regex4->matches('#FF5733'))->toBeTrue();
 
     $regex5 = Regex::build()->slug();
-    expect($regex5->match('my-awesome-slug'))->toBeTrue();
+    expect($regex5->matches('my-awesome-slug'))->toBeTrue();
 });
 
 test('massive chaining: helpers coverage part 3', function (): void {
     $regex = Regex::build()->creditCard();
-    expect($regex->match('4111-1111-1111-1111'))->toBeTrue();
+    expect($regex->matches('4111-1111-1111-1111'))->toBeTrue();
 
     $regex2 = Regex::build()->ssn();
-    expect($regex2->match('123-45-6789'))->toBeTrue();
+    expect($regex2->matches('123-45-6789'))->toBeTrue();
 
     $regex3 = Regex::build()->zipCode();
-    expect($regex3->match('12345'))->toBeTrue();
+    expect($regex3->matches('12345'))->toBeTrue();
 
     $regex4 = Regex::build()->macAddress();
-    expect($regex4->match('00:1A:2B:3C:4D:5E'))->toBeTrue();
+    expect($regex4->matches('00:1A:2B:3C:4D:5E'))->toBeTrue();
 
     $regex5 = Regex::build()->date();
-    expect($regex5->match('2024-01-15'))->toBeTrue();
+    expect($regex5->matches('2024-01-15'))->toBeTrue();
 
     $regex6 = Regex::build()->time();
-    expect($regex6->match('14:30:00'))->toBeTrue();
+    expect($regex6->matches('14:30:00'))->toBeTrue();
 
     $regex7 = Regex::build()->handle();
-    expect($regex7->match('@username'))->toBeTrue();
+    expect($regex7->matches('@username'))->toBeTrue();
 
     $regex8 = Regex::build()->hex();
-    expect($regex8->match('DEADBEEF'))->toBeTrue();
+    expect($regex8->matches('DEADBEEF'))->toBeTrue();
 });
 
 test('massive chaining: flags coverage', function (): void {
@@ -346,33 +346,33 @@ test('massive chaining: flags coverage', function (): void {
         ->ignoreCase()
         ->multiline();
 
-    expect($regex->match('HELLO world'))->toBeTrue();
+    expect($regex->matches('HELLO world'))->toBeTrue();
 
     $regex2 = Regex::build()
         ->ignoreCaseFor('test')
         ->utf8();
 
-    expect($regex2->match('TEST'))->toBeTrue();
+    expect($regex2->matches('TEST'))->toBeTrue();
 });
 
 test('massive chaining: doesnt methods coverage', function (): void {
     $regex = Regex::build()
         ->containsOnlyAlphaNumeric();
 
-    expect($regex->match('HelloWorld123'))->toBeTrue()
-        ->and($regex->match('Hello World!'))->toBeFalse();
+    expect($regex->matches('HelloWorld123'))->toBeTrue()
+        ->and($regex->matches('Hello World!'))->toBeFalse();
 
     $regex2 = Regex::build()
         ->doesntContainAnyOf(['x', 'y', 'z']);
 
-    expect($regex2->match('hello world'))->toBeTrue()
-        ->and($regex2->match('xyz'))->toBeFalse();
+    expect($regex2->matches('hello world'))->toBeTrue()
+        ->and($regex2->matches('xyz'))->toBeFalse();
 
     $regex3 = Regex::build()
         ->doesntContainBetween(['0' => '9']);
 
-    expect($regex3->match('hello'))->toBeTrue()
-        ->and($regex3->match('hello123'))->toBeFalse();
+    expect($regex3->matches('hello'))->toBeTrue()
+        ->and($regex3->matches('hello123'))->toBeFalse();
 });
 test('complex chain: contains, exactly, quantifiers and booleans', function (): void {
     $regex = Regex::build()
@@ -383,9 +383,9 @@ test('complex chain: contains, exactly, quantifiers and booleans', function (): 
         ->alpha();
     
     expect($regex->getPattern())->toBe('(?=.*\d)\da+|[a-zA-Z]+');
-    expect($regex->match('12aaa'))->toBeTrue()
-        ->and($regex->match('abc'))->toBeTrue()
-        ->and($regex->match('1'))->toBeFalse();
+    expect($regex->matches('12aaa'))->toBeTrue()
+        ->and($regex->matches('abc'))->toBeTrue()
+        ->and($regex->matches('1'))->toBeFalse();
     
     expect($regex->count('12aaa big apple 34bb'))->toBe(4);
 });
@@ -397,8 +397,8 @@ test('complex chain: sequential, helpers and flags', function (): void {
         ->ignoreCase();
     
     expect($regex->getPattern())->toBe('(?:\d){2}[a-z0-9]+(?:-[a-z0-9]+)*');
-    expect($regex->match('12MY-SLUG'))->toBeTrue()
-        ->and($regex->match('1MY-SLUG'))->toBeFalse();
+    expect($regex->matches('12MY-SLUG'))->toBeTrue()
+        ->and($regex->matches('1MY-SLUG'))->toBeFalse();
 });
 
 test('complex chain: multiple contains and replace', function (): void {
@@ -407,8 +407,8 @@ test('complex chain: multiple contains and replace', function (): void {
         ->containsDigit()
         ->containsOnlyAlphaNumeric();
     
-    expect($regex->match('apple123'))->toBeTrue()
-        ->and($regex->match('apple 123'))->toBeFalse();
+    expect($regex->matches('apple123'))->toBeTrue()
+        ->and($regex->matches('apple 123'))->toBeFalse();
     
     expect($regex->count('apple123'))->toBe(1);
     expect($regex->replace('apple123', 'X'))->toBe('X');

@@ -18,8 +18,8 @@ test('digit method works in Exactly trait', function (): void {
 test('onlyDigits method works in Exactly trait', function (): void {
     $regex = Regex::build()->onlyDigits();
     expect($regex->getPattern())->toBe('^\d+$');
-    expect($regex->match('123'))->toBeTrue()
-        ->and($regex->match('123a'))->toBeFalse();
+    expect($regex->matches('123'))->toBeTrue()
+        ->and($regex->matches('123a'))->toBeFalse();
     
     expect($regex->count('123'))->toBe(1);
     expect($regex->replace('123', 'X'))->toBe('X');
@@ -46,8 +46,8 @@ test('alphaNumeric method works in Exactly trait', function (): void {
 test('onlyAlphaNumeric method works in Exactly trait', function (): void {
     $regex = Regex::build()->onlyAlphaNumeric();
     expect($regex->getPattern())->toBe('^[A-Za-z0-9]+$');
-    expect($regex->match('abc123'))->toBeTrue()
-        ->and($regex->match('abc-123'))->toBeFalse();
+    expect($regex->matches('abc123'))->toBeTrue()
+        ->and($regex->matches('abc-123'))->toBeFalse();
     
     expect($regex->count('abc123'))->toBe(1);
     expect($regex->replace('abc123', 'X'))->toBe('X');

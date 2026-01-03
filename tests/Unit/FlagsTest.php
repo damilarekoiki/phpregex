@@ -5,7 +5,7 @@ use Ten\Phpregex\Regex;
 test('global ignoreCase flag', function (): void {
     $regex = Regex::build()->addPattern('abc')->ignoreCase();
     expect($regex->get())->toBe('/abc/i');
-    expect($regex->match('ABC'))->toBeTrue();
+    expect($regex->matches('ABC'))->toBeTrue();
     expect($regex->count('abc ABC def'))->toBe(2);
     expect($regex->replace('abc ABC', 'X'))->toBe('X X');
 });
@@ -26,9 +26,9 @@ test('multiple global flags', function (): void {
 test('local ignoreCase flag with string', function (): void {
     $regex = Regex::build()->ignoreCaseFor('abc')->addPattern('DEF');
     expect($regex->getPattern())->toBe('(?i:abc)DEF');
-    expect($regex->match('abcDEF'))->toBeTrue()
-        ->and($regex->match('ABCDEF'))->toBeTrue()
-        ->and($regex->match('abcdef'))->toBeFalse();
+    expect($regex->matches('abcDEF'))->toBeTrue()
+        ->and($regex->matches('ABCDEF'))->toBeTrue()
+        ->and($regex->matches('abcdef'))->toBeFalse();
 
     expect($regex->count('abcDEF ABCDEF abcdef'))->toBe(2);
     expect($regex->replace('ABCDEF', 'matched'))->toBe('matched');
@@ -37,7 +37,7 @@ test('local ignoreCase flag with string', function (): void {
 test('local ignoreCase flag with closure', function (): void {
     $regex = Regex::build()->ignoreCaseFor(fn(Regex $r): Regex => $r->addPattern('abc'))->addPattern('DEF');
     expect($regex->getPattern())->toBe('(?i:abc)DEF');
-    expect($regex->match('ABCDEF'))->toBeTrue();
+    expect($regex->matches('ABCDEF'))->toBeTrue();
 });
 
 test('complex combined flags', function (): void {
@@ -47,8 +47,8 @@ test('complex combined flags', function (): void {
         ->multiline();
     
     expect($regex->get())->toBe('/(?i:head)Body/m');
-    expect($regex->match('HEADBody'))->toBeTrue()
-        ->and($regex->match('headbody'))->toBeFalse();
+    expect($regex->matches('HEADBody'))->toBeTrue()
+        ->and($regex->matches('headbody'))->toBeFalse();
 });
 
 test('utf8 flag', function (): void {

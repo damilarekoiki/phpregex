@@ -38,6 +38,6 @@ $regex = Regex::build(fullStringMatch: true)
 
 echo $regex->get();
 
-$regexMatch = $regex->match('this-slug');
+$regexMatch = $regex->matches('this-slug');
 
 echo $regexMatch ? 'Match' : 'No Match';

@@ -5,9 +5,9 @@ use Ten\Phpregex\Regex;
 test('or method works', function (): void {
     $regex = Regex::build()->addPattern('apple')->or()->addPattern('banana');
     expect($regex->getPattern())->toBe('apple|banana');
-    expect($regex->match('apple'))->toBeTrue()
-        ->and($regex->match('banana'))->toBeTrue()
-        ->and($regex->match('cherry'))->toBeFalse();
+    expect($regex->matches('apple'))->toBeTrue()
+        ->and($regex->matches('banana'))->toBeTrue()
+        ->and($regex->matches('cherry'))->toBeFalse();
 
     expect($regex->count('apple banana cherry'))->toBe(2);
     expect($regex->replace('apple banana', 'fruit'))->toBe('fruit fruit');
@@ -16,8 +16,8 @@ test('or method works', function (): void {
 test('or property works', function (): void {
     $regex = Regex::build()->addPattern('apple')->or->addPattern('banana');
     expect($regex->getPattern())->toBe('apple|banana');
-    expect($regex->match('apple'))->toBeTrue()
-        ->and($regex->match('banana'))->toBeTrue();
+    expect($regex->matches('apple'))->toBeTrue()
+        ->and($regex->matches('banana'))->toBeTrue();
 });
 
 test('and method works as a bridge', function (): void {
@@ -38,8 +38,8 @@ test('and method with argument works as a lookahead', function (): void {
 test('not method works as a negative lookahead', function (): void {
     $regex = Regex::build()->beginsWith('2')->not('cherry');
     expect($regex->getPattern())->toBe('^2(?!cherry)');
-    expect($regex->match('2applebanana'))->toBeTrue()
-        ->and($regex->match('2cherryapple'))->toBeFalse();
+    expect($regex->matches('2applebanana'))->toBeTrue()
+        ->and($regex->matches('2cherryapple'))->toBeFalse();
 
     expect($regex->count('2apple 2cherry'))->toBe(1);
     expect($regex->replace('2apple', 'number'))->toBe('numberapple');
@@ -59,9 +59,9 @@ test('complex boolean combination', function (): void {
         ->addPattern('cherry');
     
     expect($regex->getPattern())->toBe('apple(?!banana)|cherry');
-    expect($regex->match('apple'))->toBeTrue()
-        ->and($regex->match('applebanana'))->toBeFalse()
-        ->and($regex->match('cherry'))->toBeTrue();
+    expect($regex->matches('apple'))->toBeTrue()
+        ->and($regex->matches('applebanana'))->toBeFalse()
+        ->and($regex->matches('cherry'))->toBeTrue();
 
     expect($regex->count('apple applebanana cherry'))->toBe(2);
     expect($regex->replace('apple cherry', 'fruit'))->toBe('fruit fruit');
@@ -105,7 +105,7 @@ test('chains all boolean methods', function (): void {
         ->when(true, fn(Regex $r): Regex => $r->addPattern('E'));
 
     expect($regex->getPattern())->toBe('A(?=.*B)(?!(?=.*C))|DE');
-    expect($regex->match('AB'))->toBeTrue()
-        ->and($regex->match('ABC'))->toBeFalse()
-        ->and($regex->match('DE'))->toBeTrue();
+    expect($regex->matches('AB'))->toBeTrue()
+        ->and($regex->matches('ABC'))->toBeFalse()
+        ->and($regex->matches('DE'))->toBeTrue();
 });
