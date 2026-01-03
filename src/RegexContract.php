@@ -2,6 +2,8 @@
 
 namespace Ten\Phpregex;
 
+use Closure;
+
 interface RegexContract
 {
     public function parse(string $expression): self;
@@ -63,11 +65,11 @@ interface RegexContract
 
     public function maybe(string|int $subject): self;
 
-    public function containsExactSequencesOf(string|int $subject, int $occurences): self;
+    public function containsExactSequencesOf(string|int|Closure $subject, int $occurences): self;
 
-    public function containsSequencesOf(string|int $subject, int $minOcurrences, int $maxOccurrences): self;
+    public function containsSequencesOf(string|int|Closure $subject, int $minOcurrences, int $maxOccurrences): self;
 
-    public function containsAtleastSequencesOf(string|int $subject, int $minOcurrences): self;
+    public function containsAtleastSequencesOf(string|int|Closure $subject, int $minOcurrences): self;
 
     public function then(string|int $subject): self;
 

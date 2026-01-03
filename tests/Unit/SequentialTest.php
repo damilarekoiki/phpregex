@@ -178,6 +178,51 @@ test('containsAtleastSequencesOf method works', function (): void {
         ->and($regex->match('appleaa'))->toBeTrue();
 });
 
+test('containsExactSequencesOf with closure works', function (): void {
+    $regex = Regex::build()->containsExactSequencesOf(fn (Regex $r): Regex => $r->addPattern('a')->or()->addPattern('b'), 3);
+    expect($regex->getPattern())->toBe('(?=.*(?:a|b){3})');
+    expect($regex->match('aba'))->toBeTrue()
+        ->and($regex->match('appleaba'))->toBeTrue();
+});
+
+test('containsSequencesOf with closure works', function (): void {
+    $regex = Regex::build()->containsSequencesOf(fn (Regex $r): Regex => $r->digit(), 2, 3);
+    expect($regex->getPattern())->toBe('(?=.*(?:\d){2,3})');
+    expect($regex->match('12'))->toBeTrue()
+        ->and($regex->match('apple123'))->toBeTrue();
+});
+
+test('containsAtleastSequencesOf with closure works', function (): void {
+    $regex = Regex::build()->containsAtleastSequencesOf(fn (Regex $r): Regex => $r->alpha(), 2);
+    expect($regex->getPattern())->toBe('(?=.*(?:[a-zA-Z]+){2,})');
+    expect($regex->match('ab'))->toBeTrue()
+        ->and($regex->match('1a34b'))->toBeFalse()
+        ->and($regex->match('appleabcd'))->toBeTrue();
+});
+
+test('exactSequencesOf with closure works', function (): void {
+    $regex = Regex::build()->exactSequencesOf(fn (Regex $r): Regex => $r->addPattern('a')->or()->addPattern('b'), 3);
+    expect($regex->getPattern())->toBe('(?:a|b){3}');
+    expect($regex->match('aba'))->toBeTrue()
+        ->and($regex->match('abc'))->toBeFalse();
+});
+
+test('sequencesOf with closure works', function (): void {
+    $regex = Regex::build()->sequencesOf(fn (Regex $r): Regex => $r->digit(), 2, 3);
+    expect($regex->getPattern())->toBe('(?:\d){2,3}');
+    expect($regex->match('12'))->toBeTrue()
+        ->and($regex->match('123'))->toBeTrue()
+        ->and($regex->match('1'))->toBeFalse();
+});
+
+test('atLeastSequencesOf with closure works', function (): void {
+    $regex = Regex::build()->atLeastSequencesOf(fn (Regex $r): Regex => $r->alpha(), 2);
+    expect($regex->getPattern())->toBe('(?:[a-zA-Z]+){2,}');
+    expect($regex->match('ab'))->toBeTrue()
+        ->and($regex->match('abcd'))->toBeTrue()
+        ->and($regex->match('a'))->toBeFalse();
+});
+
 test('chains all sequential methods', function (): void {
     $regex = Regex::build()
         ->exactSequencesOf('a', 2)
