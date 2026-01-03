@@ -33,7 +33,7 @@ test('chaining contains and or', function (): void {
 
 test('complex sequence chaining', function (): void {
     $regex = Regex::build()
-        ->sequence(function (Sequence $s): void {
+        ->containsSequence(function (Sequence $s): void {
             $s->then('foo')
               ->then(fn (Regex $r): Regex => $r->containsAnyOf(['bar', 'baz']))
               ->then('qux');
@@ -116,7 +116,7 @@ test('grouping with quantifiers and or', function (): void {
 
 test('complex sequence with not lookahead trailing', function (): void {
     $regex = Regex::build()
-        ->sequence(function (Sequence $s): void {
+        ->containsSequence(function (Sequence $s): void {
             $s->then('user_')
               ->then('123')
               ->then(fn (Regex $r): Regex => $r->not('_admin'));
@@ -155,7 +155,7 @@ test('nested grouping and complex quantifiers', function (): void {
 
 test('fullStringMatch with sequence and booleans', function (): void {
     $regex = Regex::build(true)
-        ->sequence(function (Sequence $s): void {
+        ->containsSequence(function (Sequence $s): void {
             $s->then('foo')->then('bar');
         }, true)
         ->or()
@@ -181,7 +181,7 @@ test('arrow function works with when method', function (): void {
 
 test('arrow function works with sequence method', function (): void {
     $regex = Regex::build()
-        ->sequence(fn(Sequence $s): Sequence => $s->then('a')->then('b'));
+        ->containsSequence(fn(Sequence $s): Sequence => $s->then('a')->then('b'));
     
     expect($regex->getPattern())->toBe('(?=.*(ab))');
 });

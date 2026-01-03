@@ -5,7 +5,7 @@ use Ten\Phpregex\Sequence;
 
 test('then method is order-dependent', function (): void {
     $regex = Regex::build()
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then('apple')
                 ->then('banana');
         });
@@ -20,12 +20,12 @@ test('then method is order-dependent', function (): void {
 
 test('then method is sequential', function (): void {
     $regex1 = Regex::build()
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then('apple')
                 ->then('banana');
         });
     $regex2 = Regex::build()
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then('apple')
                 ->then('2');
         });
@@ -41,25 +41,25 @@ test('then method is sequential', function (): void {
 
 test('then method scans from the beginning when startFromBeginning is true', function (): void {
     $regex1 = Regex::build()
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then('apple')
                 ->then('banana');
         }, startFromBeginning: true);
 
     $regex2 = Regex::build()
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then(fn (Regex $regex): Regex => $regex->contains('apple'))
                 ->then('banana');
         }, startFromBeginning: true);
 
     $regex3 = Regex::build()
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then('apple')
                 ->then(fn (Regex $regex): Regex => $regex->contains('banana'));
         }, startFromBeginning: true);
 
     $regex4 = Regex::build()
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then(fn (Regex $regex): Regex => $regex->contains('apple'))
                 ->then(fn (Regex $regex): Regex => $regex->contains('banana'));
         }, startFromBeginning: true);
@@ -79,25 +79,25 @@ test('then method scans from the beginning when startFromBeginning is true', fun
 
 test('then method scans from anywhere when startFromBeginning is false', function (): void {
     $regex1 = Regex::build()
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then('apple')
                 ->then('banana');
         }, startFromBeginning: false);
 
     $regex2 = Regex::build()
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then(fn (Regex $regex): Regex => $regex->contains('apple'))
                 ->then('banana');
         }, startFromBeginning: false);
 
     $regex3 = Regex::build()
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then('apple')
                 ->then(fn (Regex $regex): Regex => $regex->contains('banana'));
         }, startFromBeginning: false);
 
     $regex4 = Regex::build()
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then(fn (Regex $regex): Regex => $regex->contains('apple'))
                 ->then(fn (Regex $regex): Regex => $regex->contains('banana'));
         }, startFromBeginning: false);
@@ -117,7 +117,7 @@ test('then method scans from anywhere when startFromBeginning is false', functio
 
 test('not works in sequence', function (): void {
     $regex = Regex::build()
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then('apple')
                 ->then(fn (Regex $regex): Regex => $regex->not('banana'));
         });
@@ -246,7 +246,7 @@ test('chains all sequential methods', function (): void {
 
 test('massive sequence: positional and contains coverage', function (): void {
     $regex = Regex::build()
-        ->sequence(function (Sequence $s): void {
+        ->containsSequence(function (Sequence $s): void {
             $s->then(fn (Regex $r): Regex => $r->beginsWith('A')->containsDigit())
               ->then(fn (Regex $r): Regex => $r->between(['B' => 'D'])->notBetween(['X' => 'Z']))
               ->then(fn (Regex $r): Regex => $r->containsLetter())
@@ -260,7 +260,7 @@ test('massive sequence: positional and contains coverage', function (): void {
 
 test('massive sequence: booleans and quantifiers coverage', function (): void {
     $regex = Regex::build()
-        ->sequence(function (Sequence $s): void {
+        ->containsSequence(function (Sequence $s): void {
             $s->then(fn (Regex $r): Regex => $r->containsAtleastOne('A'))
               ->then(fn (Regex $r): Regex => $r->and('B')->not('X'))
               ->then(fn (Regex $r): Regex => $r->containsZeroOrMore('C'))
@@ -274,7 +274,7 @@ test('massive sequence: booleans and quantifiers coverage', function (): void {
 
 test('massive sequence: sequential methods coverage', function (): void {
     $regex = Regex::build()
-        ->sequence(function (Sequence $s): void {
+        ->containsSequence(function (Sequence $s): void {
             $s->then(fn (Regex $r): Regex => $r->exactSequencesOf('A', 2))
               ->then(fn (Regex $r): Regex => $r->sequencesOf('B', 2, 4))
               ->then(fn (Regex $r): Regex => $r->atLeastSequencesOf('C', 3));
@@ -287,7 +287,7 @@ test('massive sequence: sequential methods coverage', function (): void {
 
 test('massive sequence: helpers coverage', function (): void {
     $regex = Regex::build()
-        ->sequence(function (Sequence $s): void {
+        ->containsSequence(function (Sequence $s): void {
             $s->then(fn (Regex $r): Regex => $r->beginsWith('ID:'))
               ->then(fn (Regex $r): Regex => $r->digits())
               ->then(fn (Regex $r): Regex => $r->alphanumeric())
@@ -302,7 +302,7 @@ test('massive sequence: helpers coverage', function (): void {
 
 test('massive sequence: contains methods coverage', function (): void {
     $regex = Regex::build()
-        ->sequence(function (Sequence $s): void {
+        ->containsSequence(function (Sequence $s): void {
             $s->then(fn (Regex $r): Regex => $r->contains('start'))
               ->then(fn (Regex $r): Regex => $r->containsAlphaNumeric())
               ->then(fn (Regex $r): Regex => $r->containsBetween(['a' => 'z']))
@@ -317,7 +317,7 @@ test('massive sequence: contains methods coverage', function (): void {
 
 test('massive sequence: flags coverage', function (): void {
     $regex = Regex::build()
-        ->sequence(function (Sequence $s): void {
+        ->containsSequence(function (Sequence $s): void {
             $s->then(fn (Regex $r): Regex => $r->beginsWith('Hello'))
               ->then(fn (Regex $r): Regex => $r->containsLetter())
               ->then(fn (Regex $r): Regex => $r->endsWith('World'));

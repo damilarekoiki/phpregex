@@ -11,7 +11,7 @@ $regex = Regex::build(fullStringMatch: true)
     // ->doesntContain('z')
     // ->addPattern('^apple$')
     // // ->addPattern('^(?=.*a)(?!.*c).*$')
-    ->sequence(function (Sequence $sequence): void {
+    ->containsSequence(function (Sequence $sequence): void {
         $sequence->then('banana')
             ->then(fn (Regex $regex) => $regex->not('d'))
         ;

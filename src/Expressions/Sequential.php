@@ -119,7 +119,7 @@ trait Sequential
      * @param Closure $callback A closure that defines the sequence parts.
      * @param bool $startFromBeginning Whether the sequence must start from the beginning of the search.
      */
-    public function sequence(Closure $callback, bool $startFromBeginning = false): self
+    public function containsSequence(Closure $callback, bool $startFromBeginning = false): self
     {
         $sequence = new Sequence($this, $startFromBeginning);
         $callback($sequence);

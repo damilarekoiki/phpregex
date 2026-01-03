@@ -24,7 +24,7 @@ test('fullStringMatch works with consuming patterns', function (): void {
 
 test('fullStringMatch works with sequence (lookahead)', function (): void {
     $regex = Regex::build(fullStringMatch: true)
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then('a')->then('p');
         }, startFromBeginning: false);
     
@@ -36,7 +36,7 @@ test('fullStringMatch works with sequence (lookahead)', function (): void {
 
 test('fullStringMatch works with sequence (consuming)', function (): void {
     $regex = Regex::build(fullStringMatch: true)
-        ->sequence(function (Sequence $sequence): void {
+        ->containsSequence(function (Sequence $sequence): void {
             $sequence->then('a')->then('p');
         }, startFromBeginning: true);
     
