@@ -145,15 +145,15 @@ test('nested grouping and complex quantifiers', function (): void {
               ->group(fn (Regex $r2): Regex => $r2->addPattern('b')->or()->addPattern('c'))
               ->addPattern('d');
         })
-        ->containsAtleastSequencesOf('', 2);
+        ->containsAtleastSequencesOf('a', 2);
     
-    expect($regex->getPattern())->toBe('(a(b|c)d){2,}');
-    expect($regex->match('abdacd'))->toBeTrue()
-        ->and($regex->match('abdacdabdbcd'))->toBeTrue()
+    expect($regex->getPattern())->toBe('(a(b|c)d)(?=.*a{2,})');
+    expect($regex->match('abdaacd'))->toBeTrue()
+        ->and($regex->match('abdaacdabdbcd'))->toBeTrue()
         ->and($regex->match('abd'))->toBeFalse();
 });
 
-test('wholeString with sequence and booleans', function (): void {
+test('fullStringMatch with sequence and booleans', function (): void {
     $regex = Regex::build(true)
         ->sequence(function (Sequence $s): void {
             $s->then('foo')->then('bar');

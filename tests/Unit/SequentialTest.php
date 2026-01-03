@@ -130,16 +130,24 @@ test('not works in sequence', function (): void {
     expect($consuming->replace('apple fruit apple pie', 'orange'))->toBe('orange fruit orange pie');
 });
 
-test('containsExactSequencesOf method works', function (): void {
-    $regex = Regex::build()->containsExactSequencesOf('a', 3);
+test('exactSequencesOf method works', function (): void {
+    $regex = Regex::build()->exactSequencesOf('a', 3);
     expect($regex->getPattern())->toBe('a{3}');
     expect($regex->match('aaa'))->toBeTrue()
         ->and($regex->match('aa'))->toBeFalse()
         ->and($regex->match('aaaa'))->toBeTrue();
 });
 
-test('containsSequencesOf method works', function (): void {
-    $regex = Regex::build()->containsSequencesOf('a', 2, 4);
+test('containsExactSequencesOf method works', function (): void {
+    $regex = Regex::build()->containsExactSequencesOf('a', 3);
+    expect($regex->getPattern())->toBe('(?=.*a{3})');
+    expect($regex->match('aaa'))->toBeTrue()
+        ->and($regex->match('appleaaa'))->toBeTrue()
+        ->and($regex->match('aa'))->toBeFalse();
+});
+
+test('sequencesOf method works', function (): void {
+    $regex = Regex::build()->sequencesOf('a', 2, 4);
     expect($regex->getPattern())->toBe('a{2,4}');
     expect($regex->match('aa'))->toBeTrue()
         ->and($regex->match('aaa'))->toBeTrue()
@@ -147,19 +155,34 @@ test('containsSequencesOf method works', function (): void {
         ->and($regex->match('a'))->toBeFalse();
 });
 
-test('containsAtleastSequencesOf method works', function (): void {
-    $regex = Regex::build()->containsAtleastSequencesOf('a', 2);
+test('containsSequencesOf method works', function (): void {
+    $regex = Regex::build()->containsSequencesOf('a', 2, 4);
+    expect($regex->getPattern())->toBe('(?=.*a{2,4})');
+    expect($regex->match('aa'))->toBeTrue()
+        ->and($regex->match('appleaa'))->toBeTrue();
+});
+
+test('atLeastSequencesOf method works', function (): void {
+    $regex = Regex::build()->atLeastSequencesOf('a', 2);
     expect($regex->getPattern())->toBe('a{2,}');
     expect($regex->match('aa'))->toBeTrue()
         ->and($regex->match('aaaaa'))->toBeTrue()
+        ->and($regex->match('aba'))->toBeFalse()
         ->and($regex->match('a'))->toBeFalse();
+});
+
+test('containsAtleastSequencesOf method works', function (): void {
+    $regex = Regex::build()->containsAtleastSequencesOf('a', 2);
+    expect($regex->getPattern())->toBe('(?=.*a{2,})');
+    expect($regex->match('aa'))->toBeTrue()
+        ->and($regex->match('appleaa'))->toBeTrue();
 });
 
 test('chains all sequential methods', function (): void {
     $regex = Regex::build()
-        ->containsExactSequencesOf('a', 2)
-        ->containsSequencesOf('b', 1, 2)
-        ->containsAtleastSequencesOf('c', 1);
+        ->exactSequencesOf('a', 2)
+        ->sequencesOf('b', 1, 2)
+        ->atLeastSequencesOf('c', 1);
 
     expect($regex->getPattern())->toBe('a{2}b{1,2}c{1,}');
     expect($regex->match('aabbc'))->toBeTrue()
@@ -198,9 +221,9 @@ test('massive sequence: booleans and quantifiers coverage', function (): void {
 test('massive sequence: sequential methods coverage', function (): void {
     $regex = Regex::build()
         ->sequence(function (Sequence $s): void {
-            $s->then(fn (Regex $r): Regex => $r->containsExactSequencesOf('A', 2))
-              ->then(fn (Regex $r): Regex => $r->containsSequencesOf('B', 2, 4))
-              ->then(fn (Regex $r): Regex => $r->containsAtleastSequencesOf('C', 3));
+            $s->then(fn (Regex $r): Regex => $r->exactSequencesOf('A', 2))
+              ->then(fn (Regex $r): Regex => $r->sequencesOf('B', 2, 4))
+              ->then(fn (Regex $r): Regex => $r->atLeastSequencesOf('C', 3));
         }, startFromBeginning: true);
 
     expect($regex->match('AABBBBCCC'))->toBeTrue()

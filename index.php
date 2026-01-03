@@ -5,12 +5,11 @@ require_once 'vendor/autoload.php';
 use Ten\Phpregex\Regex;
 use Ten\Phpregex\Sequence;
 
-$regex = Regex::build(wholeString: true)
+$regex = Regex::build(fullStringMatch: true)
     // ->contains('nana')
     // ->not('bbanana2apple')
     // ->doesntContain('z')
     // ->addPattern('^apple$')
-    // ->wholeString()
     // // ->addPattern('^(?=.*a)(?!.*c).*$')
     ->sequence(function (Sequence $sequence): void {
         $sequence->then('banana')
@@ -34,7 +33,7 @@ $regex = Regex::build(wholeString: true)
     // ->addPattern('(?=.*a)(?=.*b)(?=.*(.*(.*apple).*(?=.*banana)))')
 ;
 
-$regex = Regex::build(wholeString: true)
+$regex = Regex::build(fullStringMatch: true)
         ->containsOnlyDigits();
 
 echo $regex->get();

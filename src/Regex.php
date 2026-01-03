@@ -37,7 +37,7 @@ final class Regex
      */
     private readonly array $magicMethods;
 
-    private bool $wholeString = false;
+    private bool $fullStringMatch = false;
     private bool $isConsuming = false;
 
     public function __construct()
@@ -48,10 +48,10 @@ final class Regex
         ];
     }
 
-    public static function build(bool $wholeString = false): self
+    public static function build(bool $fullStringMatch = false): self
     {
         $regex = new self();
-        $regex->wholeString = $wholeString;
+        $regex->fullStringMatch = $fullStringMatch;
         return $regex;
     }
 
@@ -130,7 +130,7 @@ final class Regex
     {
         $pattern = implode('', $this->patterns);
 
-        if ($this->wholeString) {
+        if ($this->fullStringMatch) {
             if (!$this->isConsuming) {
                 $pattern .= '.*';
             }
@@ -152,15 +152,6 @@ final class Regex
         $closure($regex);
         $this->addPattern($regex->getPattern());
         $this->addPattern(')');
-        return $this;
-    }
-
-    /**
-     * Indicates that the pattern should match the entire string
-     */
-    public function wholeString(): self
-    {
-        $this->wholeString = true;
         return $this;
     }
 

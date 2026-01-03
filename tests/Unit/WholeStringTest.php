@@ -3,16 +3,16 @@
 use Ten\Phpregex\Regex;
 use Ten\Phpregex\Sequence;
 
-test('wholeString works with contains (literal when first)', function (): void {
-    $regex = Regex::build(wholeString: true)->contains('a');
+test('fullStringMatch works with contains (literal when first)', function (): void {
+    $regex = Regex::build(fullStringMatch: true)->contains('a');
     
     expect($regex->getPattern())->toBe('^(?=.*a).*$');
     expect($regex->match('a'))->toBeTrue();
     expect($regex->match('apple'))->toBeTrue();
 });
 
-test('wholeString works with consuming patterns', function (): void {
-    $regex = Regex::build(wholeString: true)->addPattern('apple');
+test('fullStringMatch works with consuming patterns', function (): void {
+    $regex = Regex::build(fullStringMatch: true)->addPattern('apple');
     
     expect($regex->getPattern())->toBe('^apple$');
     expect($regex->match('apple'))->toBeTrue();
@@ -22,8 +22,8 @@ test('wholeString works with consuming patterns', function (): void {
     expect($regex->replace('apple', 'orange'))->toBe('orange');
 });
 
-test('wholeString works with sequence (lookahead)', function (): void {
-    $regex = Regex::build(wholeString: true)
+test('fullStringMatch works with sequence (lookahead)', function (): void {
+    $regex = Regex::build(fullStringMatch: true)
         ->sequence(function (Sequence $sequence): void {
             $sequence->then('a')->then('p');
         }, startFromBeginning: false);
@@ -34,8 +34,8 @@ test('wholeString works with sequence (lookahead)', function (): void {
     expect($regex->match('banana'))->toBeFalse();
 });
 
-test('wholeString works with sequence (consuming)', function (): void {
-    $regex = Regex::build(wholeString: true)
+test('fullStringMatch works with sequence (consuming)', function (): void {
+    $regex = Regex::build(fullStringMatch: true)
         ->sequence(function (Sequence $sequence): void {
             $sequence->then('a')->then('p');
         }, startFromBeginning: true);
@@ -49,8 +49,8 @@ test('wholeString works with sequence (consuming)', function (): void {
     expect($regex->replace('app', 'X'))->toBe('X');
 });
 
-test('wholeString works with doesntContain', function (): void {
-    $regex = Regex::build(wholeString: true)->doesntContain('a');
+test('fullStringMatch works with doesntContain', function (): void {
+    $regex = Regex::build(fullStringMatch: true)->doesntContain('a');
     
     expect($regex->getPattern())->toBe('^(?!.*a).*$');
     expect($regex->match('cherry'))->toBeTrue();
