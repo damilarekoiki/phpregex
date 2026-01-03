@@ -127,7 +127,6 @@ final class Regex
      * Overwrite all current patterns with a new one.
      *
      * @param string $pattern The new regex pattern string.
-     * @return void
      */
     public function overridePattern(string $pattern): void
     {

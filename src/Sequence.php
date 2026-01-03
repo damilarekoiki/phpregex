@@ -58,8 +58,6 @@ final class Sequence
 
     /**
      * Start the sequence wrapper pattern.
-     *
-     * @return void
      */
     public function startSequence(): void
     {
@@ -73,8 +71,6 @@ final class Sequence
 
     /**
      * End the sequence wrapper pattern.
-     *
-     * @return void
      */
     public function endSequence(): void
     {
