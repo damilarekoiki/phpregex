@@ -50,42 +50,63 @@ trait Flags
         return $this;
     }
 
+    /**
+     * @param string|Closure(Regex $regex): mixed $subject
+     */
     public function ignoreCaseFor(string|Closure $subject): self
     {
         return $this->addLocalFlag('i', $subject);
     }
 
+    /**
+     * @param string|Closure(Regex $regex): mixed $subject
+     */
     public function multilineFor(string|Closure $subject): self
     {
         return $this->addLocalFlag('m', $subject);
     }
 
+    /**
+     * @param string|Closure(Regex $regex): mixed $subject
+     */
     public function dotAllFor(string|Closure $subject): self
     {
         return $this->addLocalFlag('s', $subject);
     }
 
+    /**
+     * @param string|Closure(Regex $regex): mixed $subject
+     */
     public function extendedFor(string|Closure $subject): self
     {
         return $this->addLocalFlag('x', $subject);
     }
 
+    /**
+     * @param string|Closure(Regex $regex): mixed $subject
+     */
     public function utf8For(string|Closure $subject): self
     {
         return $this->addLocalFlag('u', $subject);
     }
 
+    /**
+     * @param string|Closure(Regex $regex): mixed $subject
+     */
     public function ungreedyFor(string|Closure $subject): self
     {
         return $this->addLocalFlag('U', $subject);
     }
 
+    /**
+     * @param string|Closure(Regex $regex): mixed $subject
+     */
     private function addLocalFlag(string $flag, string|Closure $subject): self
     {
         $pattern = '';
 
         if ($subject instanceof Closure) {
-            $regex = (new Regex())->build();
+            $regex = Regex::build();
             $subject($regex);
             $pattern = $regex->getPattern();
         } else {

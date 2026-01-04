@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ten\Phpregex\Expressions;
 
 use Closure;
+use Ten\Phpregex\Regex;
 use Ten\Phpregex\Sequence;
 
 trait Sequential
@@ -12,7 +13,7 @@ trait Sequential
     /**
      * Check if the subject contains an exact number of sequences of the given subject (lookahead).
      *
-     * @param string|int|Closure $subject The subject to match.
+     * @param string|int|Closure(Regex $regex): mixed $subject The subject to match.
      * @param int $occurences The exact number of occurrences.
      */
     public function containsExactSequencesOf(string|int|Closure $subject, int $occurences): self
@@ -29,7 +30,7 @@ trait Sequential
     /**
      * Match an exact number of sequences of the given subject (consuming).
      *
-     * @param string|int|Closure $subject The subject to match.
+     * @param string|int|Closure(Regex $regex): mixed $subject The subject to match.
      * @param int $occurences The exact number of occurrences.
      */
     public function exactSequencesOf(string|int|Closure $subject, int $occurences): self
@@ -46,7 +47,7 @@ trait Sequential
     /**
      * Check if the subject contains a range of sequences of the given subject (lookahead).
      *
-     * @param string|int|Closure $subject The subject to match.
+     * @param string|int|Closure(Regex $regex): mixed $subject The subject to match.
      * @param int $minOcurrences The minimum number of occurrences.
      * @param int $maxOccurrences The maximum number of occurrences.
      */
@@ -64,7 +65,7 @@ trait Sequential
     /**
      * Match a range of sequences of the given subject (consuming).
      *
-     * @param string|int|Closure $subject The subject to match.
+     * @param string|int|Closure(Regex $regex): mixed $subject The subject to match.
      * @param int $minOcurrences The minimum number of occurrences.
      * @param int $maxOccurrences The maximum number of occurrences.
      */
@@ -82,7 +83,7 @@ trait Sequential
     /**
      * Check if the subject contains at least a certain number of sequences of the given subject (lookahead).
      *
-     * @param string|int|Closure $subject The subject to match.
+     * @param string|int|Closure(Regex $regex): mixed $subject The subject to match.
      * @param int $minOcurrences The minimum number of occurrences.
      */
     public function containsAtleastSequencesOf(string|int|Closure $subject, int $minOcurrences): self
@@ -99,7 +100,7 @@ trait Sequential
     /**
      * Match at least a certain number of sequences of the given subject (consuming).
      *
-     * @param string|int|Closure $subject The subject to match.
+     * @param string|int|Closure(Regex $regex): mixed $subject The subject to match.
      * @param int $minOcurrences The minimum number of occurrences.
      */
     public function atLeastSequencesOf(string|int|Closure $subject, int $minOcurrences): self
@@ -116,7 +117,7 @@ trait Sequential
     /**
      * Start a sequential pattern building block.
      *
-     * @param Closure $callback A closure that defines the sequence parts.
+     * @param Closure(Sequence $sequence): mixed $callback A closure that defines the sequence parts.
      * @param bool $startFromBeginning Whether the sequence must start from the beginning of the search.
      */
     public function containsSequence(Closure $callback, bool $startFromBeginning = false): self

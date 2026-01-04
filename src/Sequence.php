@@ -32,15 +32,14 @@ final class Sequence
     /**
      * Define the next part of the sequence.
      *
-     * @param Closure|string|int $subject The pattern part to add.
-
+     * @param string|int|Closure(Regex $regex): mixed $subject The pattern part to add.
      */
-    public function then(Closure|string|int $subject): self
+    public function then(string|int|Closure $subject): self
     {
         $pattern = '';
 
         if ($subject instanceof Closure) {
-            $regex = (new Regex())->build();
+            $regex = Regex::build();
             $subject($regex);
             $patternFromClosure = $regex->getPattern();
 

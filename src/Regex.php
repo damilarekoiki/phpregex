@@ -86,22 +86,27 @@ final class Regex
      * Replaces matches in the subject with the given replacement.
      *
      * @param string $subject The string to search the pattern in.
-     * @param string|Closure $replacement The replacement string or a closure for callback.
+     * @param string|callable(array<string>): string $replacement The replacement string or a callable for callback.
+     * @throws LogicException If the replacement is not a string or callable.
      * @return string The resulting string after replacement.
      */
-    public function replace(string $subject, string|Closure $replacement): string
+    public function replace(string $subject, string|callable $replacement): string
     {
-        if ($replacement instanceof Closure) {
+        if ($replacement instanceof Closure || (is_object($replacement) && method_exists($replacement, '__invoke'))) {
             return (string) preg_replace_callback($this->resolve(), $replacement, $subject);
         }
 
-        return (string) preg_replace($this->resolve(), $replacement, $subject);
+        if (is_string($replacement)) {
+            return (string) preg_replace($this->resolve(), $replacement, $subject);
+        }
+
+        throw new LogicException('Replacement must be a string or callable.');
     }
 
     /**
      * Add a pattern that follows the current patterns.
      *
-     * @param string|int|Closure $subject The pattern to add.
+     * @param string|int|Closure(Regex $regex): mixed $subject The pattern to add.
      */
     public function then(string|int|Closure $subject): self
     {
@@ -148,13 +153,13 @@ final class Regex
     /**
      * Resolve a simple pattern from various subject types.
      *
-     * @param string|int|Closure $subject The subject to resolve.
+     * @param string|int|Closure(Regex $regex): mixed $subject The subject to resolve.
      * @return string The resolved regex pattern string.
      */
     private function resolveSimplePattern(string|int|Closure $subject): string
     {
         if ($subject instanceof Closure) {
-            $regex = (new self())->build();
+            $regex = self::build();
             $subject($regex);
             return $regex->getPattern();
         }
@@ -212,7 +217,7 @@ final class Regex
     /**
      * Wrap a set of patterns in a capturing group.
      *
-     * @param Closure $closure A closure that defines the patterns inside the group.
+     * @param Closure(Regex $regex): mixed $closure A closure that defines the patterns inside the group.
      */
     public function group(Closure $closure): self
     {

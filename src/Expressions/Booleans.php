@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ten\Phpregex\Expressions;
 
 use Closure;
+use Ten\Phpregex\Regex;
 
 /**
  * @property static $or Specifies alternatives
@@ -24,9 +25,9 @@ trait Booleans
     /**
      * Add an "AND" lookahead to the regex.
      *
-     * @param string|Closure|null $subject The pattern to look for.
+     * @param string|null|Closure(Regex $regex): mixed $subject The pattern to look for.
      */
-    public function and(string|Closure|null $subject = null): self
+    public function and(string|null|Closure $subject = null): self
     {
         if ($subject === null) {
             return $this;
@@ -39,7 +40,7 @@ trait Booleans
     /**
      * Add a negative lookahead to the regex.
      *
-     * @param string|Closure $subject The pattern that should not match.
+     * @param string|Closure(Regex $regex): mixed $subject The pattern that should not match.
      */
     public function not(string|Closure $subject): self
     {
@@ -51,7 +52,7 @@ trait Booleans
      * Conditionally apply a set of patterns.
      *
      * @param bool $condition The condition to check.
-     * @param Closure $callback A closure that defines the patterns to apply.
+     * @param Closure(Regex $regex): mixed $callback A closure that defines the patterns to apply.
 
      */
     public function when(bool $condition, Closure $callback): self
