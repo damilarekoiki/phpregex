@@ -137,7 +137,7 @@ trait Helpers
     /**
      * Match a social media handle (e.g., @username).
      */
-    public function handle(): self
+    public function socialHandle(): self
     {
         return $this->addPattern("@[a-zA-Z0-9_]{1,15}");
     }

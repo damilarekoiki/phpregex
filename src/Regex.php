@@ -49,6 +49,18 @@ final class Regex
         ];
     }
 
+    public function __get(string $name): mixed
+    {
+        if (!in_array($name, $this->magicMethods)) {
+            throw new LogicException("You cannot access \"{$name}\" property. Do you mean \"{$name}()\"?");
+        }
+        if (method_exists($this, $name) === false) {
+            throw new BadMethodCallException("Method \"{$name}\" does not exist.");
+        }
+
+        return $this->{$name}();
+    }
+
     /**
      * Start building a new regex.
      *
@@ -104,16 +116,6 @@ final class Regex
     }
 
     /**
-     * Add a pattern that follows the current patterns.
-     *
-     * @param string|int|Closure(Regex $regex): mixed $subject The pattern to add.
-     */
-    public function then(string|int|Closure $subject): self
-    {
-        return $this->addPattern($this->resolveSimplePattern($subject));
-    }
-
-    /**
      * Add a raw pattern string to the regex.
      *
      * @param string $pattern The regex pattern string.
@@ -131,50 +133,16 @@ final class Regex
     /**
      * Overwrite all current patterns with a new one.
      *
-     * @param string $pattern The new regex pattern string.
+     * @param string|Closure(Regex $regex): mixed $pattern The new regex pattern string.
      */
-    public function overridePattern(string $pattern): void
+    public function overridePattern(string|Closure $pattern): void
     {
-        $this->masterPattern = $pattern;
-    }
-
-    public function __get(string $name): mixed
-    {
-        if (!in_array($name, $this->magicMethods)) {
-            throw new LogicException("You cannot access \"{$name}\" property. Do you mean \"{$name}()\"?");
-        }
-        if (method_exists($this, $name) === false) {
-            throw new BadMethodCallException("Method \"{$name}\" does not exist.");
-        }
-
-        return $this->{$name}();
-    }
-
-    /**
-     * Resolve a simple pattern from various subject types.
-     *
-     * @param string|int|Closure(Regex $regex): mixed $subject The subject to resolve.
-     * @return string The resolved regex pattern string.
-     */
-    private function resolveSimplePattern(string|int|Closure $subject): string
-    {
-        if ($subject instanceof Closure) {
+        if ($pattern instanceof Closure) {
             $regex = self::build();
-            $subject($regex);
-            return $regex->getPattern();
+            $pattern($regex);
+            $pattern = $regex->getPattern();
         }
-
-        return preg_quote((string) $subject, '/');
-    }
-
-    /**
-     * Resolve the complete regex string with delimiters and flags.
-     *
-     * @return string The full regex string.
-     */
-    private function resolve(): string
-    {
-        return '/' . $this->getPattern() . '/' . implode('', array_unique($this->flags ?? []));
+        $this->masterPattern = $pattern;
     }
 
     /**
@@ -236,6 +204,33 @@ final class Regex
      */
     public function isEmpty(): bool
     {
-        return $this->patterns === [];
+        return $this->patterns === [] && ($this->masterPattern === null || $this->masterPattern === '');
+    }
+
+    /**
+     * Resolve a simple pattern from various subject types.
+     *
+     * @param string|int|Closure(Regex $regex): mixed $subject The subject to resolve.
+     * @return string The resolved regex pattern string.
+     */
+    private function resolveSimplePattern(string|int|Closure $subject): string
+    {
+        if ($subject instanceof Closure) {
+            $regex = self::build();
+            $subject($regex);
+            return $regex->getPattern();
+        }
+
+        return preg_quote((string) $subject, '/');
+    }
+
+    /**
+     * Resolve the complete regex string with delimiters and flags.
+     *
+     * @return string The full regex string.
+     */
+    private function resolve(): string
+    {
+        return '/' . $this->getPattern() . '/' . implode('', array_unique($this->flags ?? []));
     }
 }

@@ -333,7 +333,7 @@ test('massive chaining: helpers coverage part 3', function (): void {
     $regex6 = Regex::build()->time();
     expect($regex6->matches('14:30:00'))->toBeTrue();
 
-    $regex7 = Regex::build()->handle();
+    $regex7 = Regex::build()->socialHandle();
     expect($regex7->matches('@username'))->toBeTrue();
 
     $regex8 = Regex::build()->hex();

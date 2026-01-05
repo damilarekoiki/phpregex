@@ -128,7 +128,7 @@ test('time helper', function (): void {
 });
 
 test('handle helper', function (): void {
-    $regex = Regex::build(fullStringMatch: true)->handle();
+    $regex = Regex::build(fullStringMatch: true)->socialHandle();
     expect($regex->matches('@user_name'))->toBeTrue()
         ->and($regex->matches('user_name'))->toBeFalse();
 });

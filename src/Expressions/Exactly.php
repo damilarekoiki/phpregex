@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Ten\Phpregex\Expressions;
 
+use Closure;
+
 use function is_array;
+
+use Ten\Phpregex\Regex;
 
 trait Exactly
 {
@@ -150,5 +154,15 @@ trait Exactly
     public function anything(): self
     {
         return $this->addPattern('.');
+    }
+
+    /**
+     * Add a pattern that follows the current patterns.
+     *
+     * @param string|int|Closure(Regex $regex): mixed $subject The pattern to add.
+     */
+    public function then(string|int|Closure $subject): self
+    {
+        return $this->addPattern($this->resolveSimplePattern($subject));
     }
 }
