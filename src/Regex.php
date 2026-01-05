@@ -98,7 +98,7 @@ final class Regex
      * Replaces matches in the subject with the given replacement.
      *
      * @param string $subject The string to search the pattern in.
-     * @param string|callable(array<string>): string $replacement The replacement string or a callable for callback.
+     * @param string|(callable(array<int|string, string>): string) $replacement The replacement string or a callable for callback.
      * @throws LogicException If the replacement is not a string or callable.
      * @return string The resulting string after replacement.
      */
@@ -135,7 +135,7 @@ final class Regex
      *
      * @param string|Closure(Regex $regex): mixed $pattern The new regex pattern string.
      */
-    public function overridePattern(string|Closure $pattern): void
+    public function overridePattern(string|Closure $pattern): self
     {
         if ($pattern instanceof Closure) {
             $regex = self::build();
@@ -143,6 +143,7 @@ final class Regex
             $pattern = $regex->getPattern();
         }
         $this->masterPattern = $pattern;
+        return $this;
     }
 
     /**
