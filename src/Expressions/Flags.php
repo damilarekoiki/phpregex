@@ -131,7 +131,6 @@ trait Flags
     /**
      * Add a local flag group around a pattern.
      *
-     * @param string $flag
      * @param string|Closure(Regex $regex): mixed $subject
      */
     private function addLocalFlag(string $flag, string|Closure $subject): self

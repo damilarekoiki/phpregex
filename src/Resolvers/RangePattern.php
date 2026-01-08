@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ten\Phpregex\Resolvers;
 
+use Exception;
 use Stringable;
 
 final readonly class RangePattern implements Stringable
@@ -32,13 +33,24 @@ final readonly class RangePattern implements Stringable
         $pattern = $this->negated ? '[^' : '[';
 
         foreach ($this->ranges as $subject1 => $subject2) {
+            if (ctype_alpha((string) $subject1) && !ctype_alpha((string) $subject2)) {
+                throw new Exception("Range end '$subject2' must be a letter because range start '$subject1' is a letter.");
+            }
+
+            if (ctype_digit((string) $subject1) && !ctype_digit((string) $subject2)) {
+                throw new Exception("Range end '$subject2' must be a digit because range start '$subject1' is a digit.");
+            }
+
             if (!$this->caseSensitive) {
                 $subject1Lower = mb_strtolower((string) $subject1);
                 $subject2Lower = mb_strtolower((string) $subject2);
                 $subject1Upper = mb_strtoupper((string) $subject1);
                 $subject2Upper = mb_strtoupper((string) $subject2);
                 $pattern .= preg_quote($subject1Lower, '/') . '-' . preg_quote($subject2Lower, '/');
-                $pattern .= preg_quote($subject1Upper, '/') . '-' . preg_quote($subject2Upper, '/');
+
+                if ($subject1Lower !== $subject1Upper || $subject2Lower !== $subject2Upper) {
+                    $pattern .= preg_quote($subject1Upper, '/') . '-' . preg_quote($subject2Upper, '/');
+                }
             } else {
                 $pattern .= preg_quote((string) $subject1, '/') . '-' . preg_quote((string) $subject2, '/');
             }

@@ -13,7 +13,7 @@ An intuitive, readable, and powerful fluent interface for working with Regular E
 - **Fluent API**: Chain methods to build complex patterns naturally.
 - **Readable Syntax**: Methods like `beginsWith`, `contains`, `digit`, and `or` make your intent clear.
 - **Lookahead Support**: Easily implement complex "must contain" logic without the headache.
-- **Atomic & Reusable**: Build patterns using closures and reuse them across your regex.
+- **Atomic & Reusable**: Build patterns using closures and reuse them across your project.
 - **Built-in Helpers**: One-call solutions for common tasks like `email`, `url`, `uuid`, and more.
 - **Safe by Default**: Automatically handles `preg_quote` where necessary.
 
@@ -92,9 +92,9 @@ $result = $regex->replace('Score: 10', function($match) {
 | `count(string $subject)` | Count occurrences. |
 | `replace(string $subject, string\|callable $replacement)` | Replace matches. |
 | `get()` | Get the full regex string (e.g., `/^abc/i`). |
-| `getPattern()` | Get the raw regex pattern. |
-| `group(Closure $closure)` | Wrap patterns in a capturing group. |
-| `overridePattern(string\|Closure $pattern)` | Overwrite all current patterns. |
+| `getPattern()` | Get the raw regex pattern (e.g., `^abc`). |
+| `group(Closure $closure)` | Wrap patterns in a capturing group (parentheses). |
+| `overridePattern(string\|Closure $pattern)` | Overwrite all current patterns to a new one. |
 | `isEmpty()` | Check if no patterns have been added. |
 
 ### Positional & Boundaries
@@ -123,7 +123,7 @@ $result = $regex->replace('Score: 10', function($match) {
 | `doesntContainAlphaNumeric()` | Check if no alpha-numeric characters exist. |
 | `containsOnlyAlphaNumeric()` | Check if the string contains only alpha-numeric characters. |
 | `doesntContainOnlyAlphaNumeric()` | Check if the string does not consist solely of alpha-numeric characters. |
-| `containsBetween(array $ranges, bool $caseSensitive = true)` | Check if characters within specified ranges exist. |
+| `containsBetween(array $ranges, bool $caseSensitive = true)` | Check if characters within specified ranges exist `e.g. containsBetween(['a-z', '0-9'], caseSensitive: false) matches letters between a-z or A-Z or digits between 0-9 anywhere in the string`. |
 | `doesntContainBetween(array $ranges, bool $caseSensitive = true)` | Check if characters within specified ranges do NOT exist. |
 | `containsWordsThatBeginWith(string\|int $subject)` | Check if words starting with specific characters exist. |
 | `containsWordsThatEndWith(string\|int $subject)` | Check if words ending with specific characters exist. |
