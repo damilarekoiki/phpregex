@@ -63,7 +63,7 @@ trait Helpers
     }
 
     /**
-     * Match a string of digits.
+     * Match a consecutive sequence of digits.
      */
     public function digits(): self
     {
