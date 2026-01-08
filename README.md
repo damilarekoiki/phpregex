@@ -36,6 +36,8 @@ composer require damilarekoiki/phpregex
 Checking if a string is a valid invoice number (starts with `INV-`, followed by digits, and ends with `.pdf`):
 
 ```php
+require_once 'vendor/autoload.php';
+
 use DamilareKoiki\PhpRegex\Regex;
 
 $regex = Regex::build()

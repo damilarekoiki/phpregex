@@ -55,7 +55,7 @@ trait Helpers
     }
 
     /**
-     * Match only alpha characters (letters).
+     * Match a consecutive sequence of alpha characters (letters).
      */
     public function alpha(): self
     {

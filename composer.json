@@ -1,6 +1,6 @@
 {
     "name": "damilarekoiki/phpregex",
-    "description": "Intuitive way of working with regex in PHP",
+    "description": "A tool that provides you with a more readable and intuitive way of working with regex in PHP",
     "type": "library",
     "license": "MIT",
     "require": {
