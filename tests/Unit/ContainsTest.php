@@ -93,6 +93,14 @@ test('containsBetween and doesntContainBetween methods work', function (): void 
         ->and(Regex::build()->doesntContainBetween(['0' => '9'])->matches('hello123'))->toBeFalse();
 });
 
+test('containsBetween throws exception for mismatched range types', function (): void {
+    expect(fn (): Regex => Regex::build()->containsBetween(['a' => 1]))
+        ->toThrow(Exception::class, "Range end '1' must be a letter because range start 'a' is a letter.");
+
+    expect(fn (): Regex => Regex::build()->containsBetween(['1' => 'a']))
+        ->toThrow(Exception::class, "Range end 'a' must be a digit because range start '1' is a digit.");
+});
+
 test('alphanumeric methods work', function (): void {
     expect(Regex::build()->containsAlphaNumeric()->getPattern())->toBe('(?=.*[A-Za-z0-9])');
     expect(Regex::build()->containsAlphaNumeric()->matches('!@#a'))->toBeTrue()
