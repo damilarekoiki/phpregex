@@ -1,5 +1,5 @@
 {
-    "name": "ten/phpregex",
+    "name": "damilarekoiki/phpregex",
     "description": "Intuitive way of working with regex in PHP",
     "type": "library",
     "license": "MIT",
@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Ten\\Phpregex\\": "src/"
+            "DamilareKoiki\\PhpRegex\\": "src/"
         }
     },
     "authors": [

@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Ten\Phpregex\Expressions;
+namespace DamilareKoiki\PhpRegex\Expressions;
 
 use Closure;
+use DamilareKoiki\PhpRegex\Regex;
 
 use function is_array;
-
-use Ten\Phpregex\Regex;
 
 trait Exactly
 {

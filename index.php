@@ -2,8 +2,8 @@
 <?php
 require_once 'vendor/autoload.php';
 
-use Ten\Phpregex\Regex;
-use Ten\Phpregex\Sequence;
+use DamilareKoiki\PhpRegex\Regex;
+use DamilareKoiki\PhpRegex\Sequence;
 
 $regex = Regex::build(fullStringMatch: true)
     // ->contains('nana')

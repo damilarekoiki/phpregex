@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ten\Phpregex\Expressions;
+namespace DamilareKoiki\PhpRegex\Expressions;
 
 use Closure;
-use Ten\Phpregex\Regex;
+use DamilareKoiki\PhpRegex\Regex;
 
 trait Flags
 {

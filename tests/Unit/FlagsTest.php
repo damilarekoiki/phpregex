@@ -1,6 +1,6 @@
 <?php
 
-use Ten\Phpregex\Regex;
+use DamilareKoiki\PhpRegex\Regex;
 
 test('global ignoreCase flag', function (): void {
     $regex = Regex::build()->addPattern('abc')->ignoreCase();

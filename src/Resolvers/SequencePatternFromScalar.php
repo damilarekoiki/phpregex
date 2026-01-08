@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ten\Phpregex\Resolvers;
+namespace DamilareKoiki\PhpRegex\Resolvers;
 
 use Stringable;
 

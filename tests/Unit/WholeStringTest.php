@@ -1,7 +1,7 @@
 <?php
 
-use Ten\Phpregex\Regex;
-use Ten\Phpregex\Sequence;
+use DamilareKoiki\PhpRegex\Regex;
+use DamilareKoiki\PhpRegex\Sequence;
 
 test('fullStringMatch works with contains (literal when first)', function (): void {
     $regex = Regex::build(fullStringMatch: true)->contains('a');

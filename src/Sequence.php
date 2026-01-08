@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Ten\Phpregex;
+namespace DamilareKoiki\PhpRegex;
 
 use Closure;
-use Ten\Phpregex\Resolvers\SequencePatternFromClosure;
-use Ten\Phpregex\Resolvers\SequencePatternFromScalar;
+use DamilareKoiki\PhpRegex\Resolvers\SequencePatternFromClosure;
+use DamilareKoiki\PhpRegex\Resolvers\SequencePatternFromScalar;
 
 final class Sequence
 {

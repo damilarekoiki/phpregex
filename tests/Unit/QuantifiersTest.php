@@ -1,6 +1,6 @@
 <?php
 
-use Ten\Phpregex\Regex;
+use DamilareKoiki\PhpRegex\Regex;
 
 test('containsAtleastOne method works', function (): void {
     $regex = Regex::build()->containsAtleastOne('a');

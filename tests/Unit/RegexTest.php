@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Ten\Phpregex\Regex;
+use DamilareKoiki\PhpRegex\Regex;
 
 test('overridePattern with string', function (): void {
     $regex = Regex::build()->addPattern('foo');

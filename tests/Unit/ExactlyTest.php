@@ -1,6 +1,6 @@
 <?php
 
-use Ten\Phpregex\Regex;
+use DamilareKoiki\PhpRegex\Regex;
 
 test('anyOf method works in Exactly trait', function (): void {
     $regex = Regex::build()->anyOf(['apple', 'banana']);

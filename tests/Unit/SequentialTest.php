@@ -1,7 +1,7 @@
 <?php
 
-use Ten\Phpregex\Regex;
-use Ten\Phpregex\Sequence;
+use DamilareKoiki\PhpRegex\Regex;
+use DamilareKoiki\PhpRegex\Sequence;
 
 test('then method is order-dependent', function (): void {
     $regex = Regex::build()

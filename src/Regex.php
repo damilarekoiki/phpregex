@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Ten\Phpregex;
+namespace DamilareKoiki\PhpRegex;
 
 use BadMethodCallException;
 use Closure;
+use DamilareKoiki\PhpRegex\Expressions\Booleans;
+use DamilareKoiki\PhpRegex\Expressions\Contains;
+use DamilareKoiki\PhpRegex\Expressions\Exactly;
+use DamilareKoiki\PhpRegex\Expressions\Flags;
+use DamilareKoiki\PhpRegex\Expressions\Helpers;
+use DamilareKoiki\PhpRegex\Expressions\Positional;
+use DamilareKoiki\PhpRegex\Expressions\Quantifiers;
+use DamilareKoiki\PhpRegex\Expressions\Sequential;
 use LogicException;
-use Ten\Phpregex\Expressions\Booleans;
-use Ten\Phpregex\Expressions\Contains;
-use Ten\Phpregex\Expressions\Exactly;
-use Ten\Phpregex\Expressions\Flags;
-use Ten\Phpregex\Expressions\Helpers;
-use Ten\Phpregex\Expressions\Positional;
-use Ten\Phpregex\Expressions\Quantifiers;
-use Ten\Phpregex\Expressions\Sequential;
 
 final class Regex
 {

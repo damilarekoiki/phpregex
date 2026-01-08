@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Ten\Phpregex\Expressions;
+namespace DamilareKoiki\PhpRegex\Expressions;
 
 use Closure;
-use Ten\Phpregex\Regex;
-use Ten\Phpregex\Sequence;
+use DamilareKoiki\PhpRegex\Regex;
+use DamilareKoiki\PhpRegex\Sequence;
 
 trait Sequential
 {

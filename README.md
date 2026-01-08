@@ -24,7 +24,7 @@ An intuitive, readable, and powerful fluent interface for working with Regular E
 You can install the package via composer:
 
 ```bash
-composer require ten/phpregex
+composer require damilarekoiki/phpregex
 ```
 
 ---
@@ -36,7 +36,7 @@ composer require ten/phpregex
 Checking if a string is a valid invoice number (starts with `INV-`, followed by digits, and ends with `.pdf`):
 
 ```php
-use Ten\Phpregex\Regex;
+use DamilareKoiki\PhpRegex\Regex;
 
 $regex = Regex::build()
     ->beginsWith('INV')

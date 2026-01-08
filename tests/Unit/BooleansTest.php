@@ -1,6 +1,6 @@
 <?php
 
-use Ten\Phpregex\Regex;
+use DamilareKoiki\PhpRegex\Regex;
 
 test('or method works', function (): void {
     $regex = Regex::build()->addPattern('apple')->or()->addPattern('banana');

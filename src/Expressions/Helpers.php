@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ten\Phpregex\Expressions;
+namespace DamilareKoiki\PhpRegex\Expressions;
 
 trait Helpers
 {

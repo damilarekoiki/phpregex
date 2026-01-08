@@ -1,6 +1,6 @@
 <?php
 
-use Ten\Phpregex\Regex;
+use DamilareKoiki\PhpRegex\Regex;
 
 test('email helper', function (): void {
     $regex = Regex::build(fullStringMatch: true)->email();

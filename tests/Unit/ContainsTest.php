@@ -1,6 +1,6 @@
 <?php
 
-use Ten\Phpregex\Regex;
+use DamilareKoiki\PhpRegex\Regex;
 
 test('contains method vs then method', function (): void {
     $regex = Regex::build()->contains('apple');

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Ten\Phpregex\Expressions;
+namespace DamilareKoiki\PhpRegex\Expressions;
+
+use DamilareKoiki\PhpRegex\Resolvers\RangePattern;
 
 use function is_array;
 use function is_string;
-
-use Ten\Phpregex\Resolvers\RangePattern;
 
 trait Contains
 {

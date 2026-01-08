@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Ten\Phpregex\Expressions;
+namespace DamilareKoiki\PhpRegex\Expressions;
 
-use Ten\Phpregex\Resolvers\RangePattern;
+use DamilareKoiki\PhpRegex\Resolvers\RangePattern;
 
 trait Positional
 {
