@@ -98,7 +98,7 @@ final class Regex
      * Replaces matches in the subject with the given replacement.
      *
      * @param string $subject The string to search the pattern in.
-     * @param string|(callable(array<int|string, string>): string) $replacement The replacement string or a callable for callback.
+     * @param string|(callable(array<int, int|string>): mixed) $replacement The replacement string or a callable for callback.
      * @throws LogicException If the replacement is not a string or callable.
      * @return string The resulting string after replacement.
      */

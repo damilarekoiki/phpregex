@@ -59,7 +59,7 @@ Validate a password: must contain at least one digit, one uppercase letter, and 
 $regex = Regex::build()
     ->containsDigit()
     ->containsUppercaseLetter()
-    ->containsAtLeastSequencesOf(fn($r) => $r->anything(), 8);
+    ->containsAtLeastSequencesOf(fn(Regex $regex) => $regex->anything(), 8);
 
 $regex->matches('Pass1234'); // true
 ```
@@ -76,7 +76,7 @@ $count = $regex->count('There are 12 apples and 34 oranges.'); // 2
 $clean = $regex->replace('Order #12345', 'XXXXX'); // "Order #XXXXX"
 
 // Using callbacks for replacement
-$result = $regex->replace('Score: 10', function($match) {
+$result = $regex->replace('Score: 10', function(array $match): int {
     return (int)$match[0] * 2;
 }); // "Score: 20"
 ```
@@ -234,9 +234,9 @@ Highly optimized patterns for common use cases:
 Use `containsSequence` to match a sequence of patterns anywhere in the string:
 
 ```php
-$regex = Regex::build()->containsSequence(function (Sequence $sequence) {
+$regex = Regex::build()->containsSequence(function (Sequence $sequence): void {
     $sequence->then('Step 1')
-      ->then(fn($r) => $r->digits())
+      ->then(fn(Regex $regex) => $regex->digits())
       ->then('Finished');
 });
 ```

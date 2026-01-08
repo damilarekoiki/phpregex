@@ -39,15 +39,20 @@ test('replace with string', function (): void {
 
 test('replace with Closure', function (): void {
     $regex = Regex::build()->addPattern('foo');
-    $result = $regex->replace('foobar', fn(array $matches) => strtoupper($matches[0]));
+    $result = $regex->replace('foobar', fn(array $matches): string => strtoupper((string) $matches[0]));
+
+    $regex2 = Regex::build()->digits();
+    $result2 = $regex2->replace('Score: 10', fn(array $match): int => (int)$match[0] * 2);
+    
     expect($result)->toBe('FOObar');
+    expect($result2)->toBe('Score: 20');
 });
 
 test('replace with invokable object', function (): void {
     $regex = Regex::build()->addPattern('foo');
     $invokable = new class {
         /**
-         * @param array<int|string, string> $matches
+         * @param array<int, int|string> $matches
          */
         public function __invoke(array $matches): string
         {
