@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DamilareKoiki\PhpRegex\Resolvers;
 
-use Exception;
+use LogicException;
 use Stringable;
 
 final readonly class RangePattern implements Stringable
@@ -34,11 +34,11 @@ final readonly class RangePattern implements Stringable
 
         foreach ($this->ranges as $subject1 => $subject2) {
             if (ctype_alpha((string) $subject1) && !ctype_alpha((string) $subject2)) {
-                throw new Exception("Range end '$subject2' must be a letter because range start '$subject1' is a letter.");
+                throw new LogicException("Range end '$subject2' must be a letter because range start '$subject1' is a letter.");
             }
 
             if (ctype_digit((string) $subject1) && !ctype_digit((string) $subject2)) {
-                throw new Exception("Range end '$subject2' must be a digit because range start '$subject1' is a digit.");
+                throw new LogicException("Range end '$subject2' must be a digit because range start '$subject1' is a digit.");
             }
 
             if (!$this->caseSensitive) {
