@@ -21,6 +21,13 @@ test('doesntContain method works', function (): void {
     expect($regex->replace('sweet banana', 'X'))->toBe('X');
 });
 
+test('doesntContain methods ignore empty parameters', function (): void {
+    expect(Regex::build()->doesntContain('')->isEmpty())->toBeTrue();
+    expect(Regex::build()->doesntContainAnyOf([])->isEmpty())->toBeTrue();
+    expect(Regex::build()->doesntContainAnyOf('')->isEmpty())->toBeTrue();
+    expect(Regex::build()->doesntContainBetween([])->isEmpty())->toBeTrue();
+});
+
 test('containsAnyOf method works with array', function (): void {
     $regex = Regex::build()->containsAnyOf(['apple', 'banana']);
     expect($regex->getPattern())->toBe('(?=.*(apple|banana))');
@@ -55,11 +62,12 @@ test('digit methods work', function (): void {
     expect(Regex::build()->containsDigit()->matches('abc1def'))->toBeTrue()
         ->and(Regex::build()->containsDigit()->matches('abcdef'))->toBeFalse();
 
-    expect(Regex::build()->doesntContainDigit()->getPattern())->toBe('^(?!.*\d).+$');
+    expect(Regex::build()->doesntContainDigit()->getPattern())->toBe('^(?!.*\d).*$');
     expect(Regex::build()->doesntContainDigit()->matches('abcdef'))->toBeTrue()
         ->and(Regex::build()->doesntContainDigit()->matches('abc1def'))->toBeFalse()
         ->and(Regex::build()->doesntContainDigit()->matches('1'))->toBeFalse()
-        ->and(Regex::build()->doesntContainDigit()->matches(' 1'))->toBeFalse();
+        ->and(Regex::build()->doesntContainDigit()->matches(' 1'))->toBeFalse()
+        ->and(Regex::build()->doesntContainDigit()->matches(''))->toBeTrue();
 
 
     expect(Regex::build()->containsOnlyDigits()->getPattern())->toBe('^\d+$');
@@ -68,9 +76,10 @@ test('digit methods work', function (): void {
     expect(Regex::build()->containsOnlyDigits()->count('12345'))->toBe(1);
     expect(Regex::build()->containsOnlyDigits()->replace('12345', 'X'))->toBe('X');
 
-    expect(Regex::build()->doesntContainOnlyDigits()->getPattern())->toBe('^(?!\d+$).+');
+    expect(Regex::build()->doesntContainOnlyDigits()->getPattern())->toBe('^$|^(?!\d+$).+');
     expect(Regex::build()->doesntContainOnlyDigits()->matches('123a45'))->toBeTrue()
-        ->and(Regex::build()->doesntContainOnlyDigits()->matches('12345'))->toBeFalse();
+        ->and(Regex::build()->doesntContainOnlyDigits()->matches('12345'))->toBeFalse()
+        ->and(Regex::build()->doesntContainOnlyDigits()->matches(''))->toBeTrue();
     expect(Regex::build()->doesntContainOnlyDigits()->count('123a45'))->toBe(1);
     expect(Regex::build()->doesntContainOnlyDigits()->replace('123a45', 'X'))->toBe('X');
 
@@ -88,9 +97,10 @@ test('containsBetween and doesntContainBetween methods work', function (): void 
     expect(Regex::build()->containsBetween(['a' => 'z', '0' => '9'])->matches('hello123'))->toBeTrue()
         ->and(Regex::build()->containsBetween(['a' => 'z', '0' => '9'])->matches('!@#$%'))->toBeFalse();
 
-    expect(Regex::build()->doesntContainBetween(['0' => '9'])->getPattern())->toBe('^(?!.*[0-9]).+$');
+    expect(Regex::build()->doesntContainBetween(['0' => '9'])->getPattern())->toBe('^(?!.*[0-9]).*$');
     expect(Regex::build()->doesntContainBetween(['0' => '5'])->matches('hello6'))->toBeTrue()
-        ->and(Regex::build()->doesntContainBetween(['0' => '9'])->matches('hello123'))->toBeFalse();
+        ->and(Regex::build()->doesntContainBetween(['0' => '9'])->matches('hello123'))->toBeFalse()
+        ->and(Regex::build()->doesntContainBetween(['0' => '9'])->matches(''))->toBeTrue();
 });
 
 test('containsBetween throws exception for mismatched range types', function (): void {
@@ -116,9 +126,10 @@ test('alphanumeric methods work', function (): void {
     expect(Regex::build()->containsOnlyAlphaNumeric()->count('abc123'))->toBe(1);
     expect(Regex::build()->containsOnlyAlphaNumeric()->replace('abc123', 'X'))->toBe('X');
 
-    expect(Regex::build()->doesntContainOnlyAlphaNumeric()->getPattern())->toBe('[^A-Za-z0-9]');
+    expect(Regex::build()->doesntContainOnlyAlphaNumeric()->getPattern())->toBe('^$|[^A-Za-z0-9]');
     expect(Regex::build()->doesntContainOnlyAlphaNumeric()->matches('abc-123'))->toBeTrue()
-        ->and(Regex::build()->doesntContainOnlyAlphaNumeric()->matches('abc123'))->toBeFalse();
+        ->and(Regex::build()->doesntContainOnlyAlphaNumeric()->matches('abc123'))->toBeFalse()
+        ->and(Regex::build()->doesntContainOnlyAlphaNumeric()->matches(''))->toBeTrue();
     expect(Regex::build()->doesntContainOnlyAlphaNumeric()->count('abc-123'))->toBe(1);
     expect(Regex::build()->doesntContainOnlyAlphaNumeric()->replace('abc-123', 'X'))->toBe('abcX123');
 });
@@ -178,7 +189,7 @@ test('chains various contains and doesnt methods', function (): void {
         ->containsNonWordCharacter()
         ->containsAnything();
     
-    expect($regex->getPattern())->toBe('(?=.*\d)^(?!.*\d).+$(?=.*[a-z])(?=.*[A-Z])(?=.*\s)(?=.*\S)(?=.*\w)(?=.*\W)(?=.*.)');
+    expect($regex->getPattern())->toBe('(?=.*\d)^(?!.*\d).*$(?=.*[a-z])(?=.*[A-Z])(?=.*\s)(?=.*\S)(?=.*\w)(?=.*\W)(?=.*.)');
     
     $regex2 = Regex::build()
         ->containsDigit()

@@ -30,6 +30,10 @@ trait Contains
      */
     public function doesntContain(string|int $chars): self
     {
+        if (is_string($chars) && $chars === '') {
+            return $this;
+        }
+
         return $this->addPattern('(?!.*' . preg_quote((string) $chars, '/') . ')', false);
     }
 
@@ -63,7 +67,11 @@ trait Contains
      */
     public function doesntContainAnyOf(string|array $chars): self
     {
-        if (empty($chars)) {
+        if (is_array($chars) && $chars === []) {
+            return $this;
+        }
+
+        if (is_string($chars) && $chars === '') {
             return $this;
         }
 
@@ -89,7 +97,7 @@ trait Contains
      */
     public function doesntContainDigit(): self
     {
-        return $this->addPattern('^(?!.*\d).+$', false);
+        return $this->addPattern('^(?!.*\d).*$', false);
     }
 
     /**
@@ -119,7 +127,11 @@ trait Contains
      */
     public function doesntContainBetween(array $ranges, bool $caseSensitive = true): self
     {
-        return $this->addPattern('^(?!.*' . new RangePattern($ranges, negated: false, caseSensitive: $caseSensitive) . ').+$', false);
+        if ($ranges === []) {
+            return $this;
+        }
+
+        return $this->addPattern('^(?!.*' . new RangePattern($ranges, negated: false, caseSensitive: $caseSensitive) . ').*$', false);
     }
 
     /**
@@ -127,7 +139,7 @@ trait Contains
      */
     public function doesntContainOnlyDigits(): self
     {
-        return $this->addPattern("^(?!\d+$).+");
+        return $this->addPattern("^$|^(?!\d+$).+");
     }
 
     /**
@@ -167,7 +179,7 @@ trait Contains
      */
     public function doesntContainOnlyAlphaNumeric(): self
     {
-        return $this->addPattern("[^A-Za-z0-9]");
+        return $this->addPattern("^$|[^A-Za-z0-9]");
     }
 
     /**
