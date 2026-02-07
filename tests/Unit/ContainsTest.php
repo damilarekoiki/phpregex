@@ -12,6 +12,13 @@ test('contains method vs then method', function (): void {
     expect($consuming->count('applefruit apple pie appleg'))->toBe(2);
 });
 
+test('contains method works well with empty string', function (): void {
+    $regex = Regex::build()->contains('');
+    expect($regex->getPattern())->toBe('(?=.*)');
+    expect($regex->matches('apple'))->toBeTrue()
+        ->and($regex->matches(''))->toBeTrue();
+});
+
 test('doesntContain method works', function (): void {
     $regex = Regex::build(true)->doesntContain('apple');
     expect($regex->getPattern())->toBe('^(?!.*apple).*$');
@@ -19,6 +26,9 @@ test('doesntContain method works', function (): void {
         ->and($regex->matches('sweet apple'))->toBeFalse();
     expect($regex->count('sweet banana'))->toBe(1);
     expect($regex->replace('sweet banana', 'X'))->toBe('X');
+
+    expect(Regex::build()->doesntContain('')->matches('sweet banana'))->toBeFalse()
+        ->and(Regex::build()->doesntContain('')->matches(''))->toBeFalse();
 });
 
 test('containsAnyOf method works with array', function (): void {
@@ -34,6 +44,9 @@ test('containsAnyOf method works with string', function (): void {
     expect($regex->getPattern())->toBe('(?=.*[abc])');
     expect($regex->matches('apple'))->toBeTrue()
         ->and($regex->matches('dog'))->toBeFalse();
+
+    expect(Regex::build()->containsAnyOf('')->matches('xyz'))->toBeTrue()
+        ->and(Regex::build()->containsAnyOf('')->matches(''))->toBeTrue();
 });
 
 test('doesntContainAnyOf method works with array', function (): void {
@@ -48,6 +61,19 @@ test('doesntContainAnyOf method works with string', function (): void {
     expect($regex->getPattern())->toBe('^[^abc]*$');
     expect($regex->matches('xyz'))->toBeTrue()
         ->and($regex->matches('apple'))->toBeFalse();
+
+    expect(Regex::build()->doesntContainAnyOf('')->matches('xyz'))->toBeFalse()
+        ->and(Regex::build()->doesntContainAnyOf('')->matches(''))->toBeFalse();
+});
+
+test('containsAnyOf method throws exception for empty array', function (): void {
+    expect(fn (): Regex => Regex::build()->containsAnyOf([]))
+        ->toThrow(InvalidArgumentException::class);
+});
+
+test('doesntContainAnyOf method throws exception for empty array', function (): void {
+    expect(fn (): Regex => Regex::build()->doesntContainAnyOf([]))
+        ->toThrow(InvalidArgumentException::class);
 });
 
 test('digit methods work', function (): void {
@@ -55,11 +81,12 @@ test('digit methods work', function (): void {
     expect(Regex::build()->containsDigit()->matches('abc1def'))->toBeTrue()
         ->and(Regex::build()->containsDigit()->matches('abcdef'))->toBeFalse();
 
-    expect(Regex::build()->doesntContainDigit()->getPattern())->toBe('^(?!.*\d).+$');
+    expect(Regex::build()->doesntContainDigit()->getPattern())->toBe('^(?!.*\d).*$');
     expect(Regex::build()->doesntContainDigit()->matches('abcdef'))->toBeTrue()
         ->and(Regex::build()->doesntContainDigit()->matches('abc1def'))->toBeFalse()
         ->and(Regex::build()->doesntContainDigit()->matches('1'))->toBeFalse()
-        ->and(Regex::build()->doesntContainDigit()->matches(' 1'))->toBeFalse();
+        ->and(Regex::build()->doesntContainDigit()->matches(' 1'))->toBeFalse()
+        ->and(Regex::build()->doesntContainDigit()->matches(''))->toBeTrue();
 
 
     expect(Regex::build()->containsOnlyDigits()->getPattern())->toBe('^\d+$');
@@ -68,9 +95,11 @@ test('digit methods work', function (): void {
     expect(Regex::build()->containsOnlyDigits()->count('12345'))->toBe(1);
     expect(Regex::build()->containsOnlyDigits()->replace('12345', 'X'))->toBe('X');
 
-    expect(Regex::build()->doesntContainOnlyDigits()->getPattern())->toBe('^(?!\d+$).+');
+    expect(Regex::build()->doesntContainOnlyDigits()->getPattern())->toBe('^$|^(?!\d+$).+');
     expect(Regex::build()->doesntContainOnlyDigits()->matches('123a45'))->toBeTrue()
-        ->and(Regex::build()->doesntContainOnlyDigits()->matches('12345'))->toBeFalse();
+        ->and(Regex::build()->doesntContainOnlyDigits()->matches('12345'))->toBeFalse()
+        ->and(Regex::build()->doesntContainOnlyDigits()->matches('aaa'))->toBeTrue()
+        ->and(Regex::build()->doesntContainOnlyDigits()->matches(''))->toBeTrue();
     expect(Regex::build()->doesntContainOnlyDigits()->count('123a45'))->toBe(1);
     expect(Regex::build()->doesntContainOnlyDigits()->replace('123a45', 'X'))->toBe('X');
 
@@ -88,9 +117,10 @@ test('containsBetween and doesntContainBetween methods work', function (): void 
     expect(Regex::build()->containsBetween(['a' => 'z', '0' => '9'])->matches('hello123'))->toBeTrue()
         ->and(Regex::build()->containsBetween(['a' => 'z', '0' => '9'])->matches('!@#$%'))->toBeFalse();
 
-    expect(Regex::build()->doesntContainBetween(['0' => '9'])->getPattern())->toBe('^(?!.*[0-9]).+$');
+    expect(Regex::build()->doesntContainBetween(['0' => '9'])->getPattern())->toBe('^(?!.*[0-9]).*$');
     expect(Regex::build()->doesntContainBetween(['0' => '5'])->matches('hello6'))->toBeTrue()
-        ->and(Regex::build()->doesntContainBetween(['0' => '9'])->matches('hello123'))->toBeFalse();
+        ->and(Regex::build()->doesntContainBetween(['0' => '9'])->matches('hello123'))->toBeFalse()
+        ->and(Regex::build()->doesntContainBetween(['0' => '9'])->matches(''))->toBeTrue();
 });
 
 test('containsBetween throws exception for mismatched range types', function (): void {
@@ -99,6 +129,14 @@ test('containsBetween throws exception for mismatched range types', function ():
 
     expect(fn (): Regex => Regex::build()->containsBetween(['1' => 'a']))
         ->toThrow(Exception::class, "Range end 'a' must be a digit because range start '1' is a digit.");
+});
+
+test('containsBetween throws exception for empty array', function (): void {
+    expect(fn (): Regex => Regex::build()->containsBetween([]))->toThrow(InvalidArgumentException::class);
+});
+
+test('doesntContainBetween method throws exception for empty array', function (): void {
+    expect(fn (): Regex => Regex::build()->doesntContainBetween([]))->toThrow(InvalidArgumentException::class);
 });
 
 test('alphanumeric methods work', function (): void {
@@ -116,9 +154,10 @@ test('alphanumeric methods work', function (): void {
     expect(Regex::build()->containsOnlyAlphaNumeric()->count('abc123'))->toBe(1);
     expect(Regex::build()->containsOnlyAlphaNumeric()->replace('abc123', 'X'))->toBe('X');
 
-    expect(Regex::build()->doesntContainOnlyAlphaNumeric()->getPattern())->toBe('[^A-Za-z0-9]');
+    expect(Regex::build()->doesntContainOnlyAlphaNumeric()->getPattern())->toBe('^$|[^A-Za-z0-9]');
     expect(Regex::build()->doesntContainOnlyAlphaNumeric()->matches('abc-123'))->toBeTrue()
-        ->and(Regex::build()->doesntContainOnlyAlphaNumeric()->matches('abc123'))->toBeFalse();
+        ->and(Regex::build()->doesntContainOnlyAlphaNumeric()->matches('abc123'))->toBeFalse()
+        ->and(Regex::build()->doesntContainOnlyAlphaNumeric()->matches(''))->toBeTrue();
     expect(Regex::build()->doesntContainOnlyAlphaNumeric()->count('abc-123'))->toBe(1);
     expect(Regex::build()->doesntContainOnlyAlphaNumeric()->replace('abc-123', 'X'))->toBe('abcX123');
 });
@@ -126,11 +165,15 @@ test('alphanumeric methods work', function (): void {
 test('word boundary methods work', function (): void {
     expect(Regex::build()->containsWordsThatBeginWith('start')->getPattern())->toBe('(?=.*\bstart)');
     expect(Regex::build()->containsWordsThatBeginWith('start')->matches('the start event'))->toBeTrue()
-        ->and(Regex::build()->containsWordsThatBeginWith('start')->matches('restarting'))->toBeFalse();
+        ->and(Regex::build()->containsWordsThatBeginWith('start')->matches('restarting'))->toBeFalse()
+        ->and(Regex::build()->containsWordsThatBeginWith('a.b')->matches('a.b test'))->toBeTrue()
+        ->and(Regex::build()->containsWordsThatBeginWith('a.b')->matches('aXb test'))->toBeFalse();
 
     expect(Regex::build()->containsWordsThatEndWith('end')->getPattern())->toBe('(?=.*end\b)');
     expect(Regex::build()->containsWordsThatEndWith('end')->matches('the weekend'))->toBeTrue()
-        ->and(Regex::build()->containsWordsThatEndWith('end')->matches('ending soon'))->toBeFalse();
+        ->and(Regex::build()->containsWordsThatEndWith('end')->matches('ending soon'))->toBeFalse()
+        ->and(Regex::build()->containsWordsThatEndWith('a.b')->matches('test a.b'))->toBeTrue()
+        ->and(Regex::build()->containsWordsThatEndWith('a.b')->matches('test aXb'))->toBeFalse();
 });
 
 test('letter and whitespace methods work', function (): void {
@@ -178,7 +221,7 @@ test('chains various contains and doesnt methods', function (): void {
         ->containsNonWordCharacter()
         ->containsAnything();
     
-    expect($regex->getPattern())->toBe('(?=.*\d)^(?!.*\d).+$(?=.*[a-z])(?=.*[A-Z])(?=.*\s)(?=.*\S)(?=.*\w)(?=.*\W)(?=.*.)');
+    expect($regex->getPattern())->toBe('(?=.*\d)^(?!.*\d).*$(?=.*[a-z])(?=.*[A-Z])(?=.*\s)(?=.*\S)(?=.*\w)(?=.*\W)(?=.*.)');
     
     $regex2 = Regex::build()
         ->containsDigit()

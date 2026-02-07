@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DamilareKoiki\PhpRegex\Expressions;
 
 use DamilareKoiki\PhpRegex\Resolvers\RangePattern;
+use InvalidArgumentException;
 
 use function is_array;
 use function is_string;
@@ -40,8 +41,12 @@ trait Contains
      */
     public function containsAnyOf(string|array $chars): self
     {
-        if (empty($chars)) {
-            return $this;
+        if (is_array($chars) && $chars === []) {
+            throw new InvalidArgumentException('Chars cannot be an empty array. Pass an empty string instead or wrap the method around the when() method.');
+        }
+
+        if (is_string($chars) && $chars === '') {
+            return $this->addPattern('(?=.*)', false);
         }
 
         if (is_array($chars)) {
@@ -63,8 +68,12 @@ trait Contains
      */
     public function doesntContainAnyOf(string|array $chars): self
     {
-        if (empty($chars)) {
-            return $this;
+        if (is_array($chars) && $chars === []) {
+            throw new InvalidArgumentException('Chars cannot be an empty array. Pass an empty string instead or wrap the method around the when() method.');
+        }
+
+        if (is_string($chars) && $chars === '') {
+            return $this->addPattern('(?!)', false);
         }
 
         if (is_array($chars)) {
@@ -89,7 +98,7 @@ trait Contains
      */
     public function doesntContainDigit(): self
     {
-        return $this->addPattern('^(?!.*\d).+$', false);
+        return $this->addPattern('^(?!.*\d).*$', false);
     }
 
     /**
@@ -108,6 +117,10 @@ trait Contains
      */
     public function containsBetween(array $ranges, bool $caseSensitive = true): self
     {
+        if ($ranges === []) {
+            throw new InvalidArgumentException('Ranges cannot be empty. Wrap the method around the when() method to prevent this error.');
+        }
+
         return $this->addPattern('(?=.*' . new RangePattern($ranges, negated: false, caseSensitive: $caseSensitive) . ')', false);
     }
 
@@ -119,7 +132,11 @@ trait Contains
      */
     public function doesntContainBetween(array $ranges, bool $caseSensitive = true): self
     {
-        return $this->addPattern('^(?!.*' . new RangePattern($ranges, negated: false, caseSensitive: $caseSensitive) . ').+$', false);
+        if ($ranges === []) {
+            throw new InvalidArgumentException('Ranges cannot be empty. Wrap the method around the when() method to prevent this error.');
+        }
+
+        return $this->addPattern('^(?!.*' . new RangePattern($ranges, negated: false, caseSensitive: $caseSensitive) . ').*$', false);
     }
 
     /**
@@ -127,7 +144,7 @@ trait Contains
      */
     public function doesntContainOnlyDigits(): self
     {
-        return $this->addPattern("^(?!\d+$).+");
+        return $this->addPattern("^$|^(?!\d+$).+");
     }
 
     /**
@@ -167,7 +184,7 @@ trait Contains
      */
     public function doesntContainOnlyAlphaNumeric(): self
     {
-        return $this->addPattern("[^A-Za-z0-9]");
+        return $this->addPattern("^$|[^A-Za-z0-9]");
     }
 
     /**
@@ -177,7 +194,7 @@ trait Contains
      */
     public function containsWordsThatBeginWith(string|int $subject): self
     {
-        return $this->addPattern('(?=.*\b' . $subject . ')', false);
+        return $this->addPattern('(?=.*\b' . $this->resolveSimplePattern($subject) . ')', false);
     }
 
     /**
@@ -187,7 +204,7 @@ trait Contains
      */
     public function containsWordsThatEndWith(string|int $subject): self
     {
-        return $this->addPattern('(?=.*' . $subject . '\b)', false);
+        return $this->addPattern('(?=.*' . $this->resolveSimplePattern($subject) . '\b)', false);
     }
 
     /**
